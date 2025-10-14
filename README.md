@@ -31,7 +31,7 @@ bun link
 Link it in any other of yours projects to test it:
 
 ```bash
-bun link react-molstar
+bun link react-molstar-wrapper
 ```
 
 (TS import)
