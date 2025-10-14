@@ -1,4 +1,4 @@
-# react-molstar - React wrapper for Mol*
+# react-molstar-wrapper - React wrapper for Mol*
 
 Simple React wrapper for MolStar molecular visualization library.
 
