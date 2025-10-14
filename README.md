@@ -50,6 +50,43 @@ bun run type:check
 bun run check
 ```
 
+## Commit Conventions
+
+Use the following prefixes for commit messages:
+
+- **Fix**: Bug fixes and error corrections
+- **Feat**: New features, feature updates, refactoring
+- **Misc**: Deployment changes, comments, scripts, non-direct fixes
+- **Doc**: Documentation changes
+- **Review**: Small changes during code review
+- **Tests**: Test-related changes
+
+**Examples:**
+
+- `Fix: Resolve protein search query validation`
+- `Feat: Add 3D protein structure visualization`
+- `Misc: Update deployment configuration`
+- `Doc: Update API documentation`
+- `Review: Improve error handling`
+- `Tests: Add unit tests for search functionality`
+
+## Branch Naming
+
+Use descriptive branch names with appropriate prefixes:
+
+- `feature/description` - New features
+- `fix/description` - Bug fixes
+- `misc/description` - Other changes
+- `doc/description` - Documentation updates
+
+**Examples:**
+
+- `feature/protein-search-filters`
+- `fix/3d-viewer-loading-issue`
+- `misc/update-dependencies`
+- `doc/api-documentation`
+
+
 ## Sources
 
 ```typescript
