@@ -47,6 +47,13 @@ function App() {
     ];
   };
 
+  const modelSourceUrls = useMemo(
+    () => ({
+      uniProtId: "https://api.stage.alphafind.dyn.cloud.e-infra.cz/protein",
+    }),
+    [],
+  );
+
   const firstViewerProteins = useMemo(
     () => [
       {
@@ -180,6 +187,7 @@ function App() {
           <Viewer
             ref={viewerRef}
             proteins={firstViewerProteins}
+            modelSourceUrls={modelSourceUrls}
             spin={true}
             height={600}
             bgColor="#FFFFFF"

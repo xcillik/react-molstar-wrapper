@@ -61,6 +61,7 @@ export type ViewerRef = {
  *   directly and does not call `createMVS`.
  * @param modelSourceUrls - Optional lookup mapping used by `createMVS` to resolve
  *   model source URLs for remote model retrieval when `proteins` is used.
+ *   Without trailing slashes, e.g. { uniProtId: "https://api.example.com/protein" }.
  * @param initialUI - Which initial UI preset to use for the embedded plugin.
  *   Typical values: "standard" | "minimal". Default: "standard".
  * @param bgColor - Background color for the viewer (any valid CSS color). Default: "#ffffff".

@@ -44,9 +44,13 @@ function inferColors(count: number, domainColors: boolean): ColorHEX[] {
 
 function prepareModelSourceUrl(
   protein: Protein,
-  modelSourceUrls: ModelSourceUrls,
+  modelSourceUrls: Partial<ModelSourceUrls>,
   plugin?: Plugin,
 ) {
+  const defaultModelSourceUrls = {
+    uniProtId: "https://alphafold.ebi.ac.uk/files",
+  };
+
   let url: string;
 
   if (protein.file) {
@@ -57,9 +61,10 @@ function prepareModelSourceUrl(
     }
 
     url = plugin.createObjectUrlFromFile(protein.file);
+  } else if (modelSourceUrls.uniProtId) {
+    url = `${modelSourceUrls.uniProtId}/${protein.uniProtId}`;
   } else {
-    const baseUrl = modelSourceUrls.uniProtId;
-    url = `${baseUrl}/AF-${protein.uniProtId}-F1-model_v6.cif`;
+    url = `${defaultModelSourceUrls.uniProtId}/AF-${protein.uniProtId}-F1-model_v6.cif`;
   }
 
   return url;
@@ -220,11 +225,6 @@ function createMVS(
   modelSourceUrls: Partial<ModelSourceUrls>,
   plugin?: Plugin,
 ): MVSData {
-  const _modelSourceUrls = {
-    uniProtId: "https://alphafold.ebi.ac.uk/files",
-    ...modelSourceUrls,
-  };
-
   const isDomain = proteins.some((p) => p.choppingData);
   const colors = inferColors(proteins.length, isDomain);
 
@@ -234,7 +234,7 @@ function createMVS(
     // biome-ignore lint/style/noNonNullAssertion: Safe because of loop condition
     const protein = proteins[i]!;
 
-    const url = prepareModelSourceUrl(protein, _modelSourceUrls, plugin);
+    const url = prepareModelSourceUrl(protein, modelSourceUrls, plugin);
 
     const download = root.download({ url });
 
