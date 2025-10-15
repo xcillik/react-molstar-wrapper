@@ -27,9 +27,9 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js"
-    },
-    "./style.css": "./dist/react-molstar-wrapper.css"
+      "require": "./dist/index.cjs.js",
+      "style": "./dist/react-molstar-wrapper.css"
+    }
   },
   "files": [
     "dist"

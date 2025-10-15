@@ -1,4 +1,5 @@
 export { default as Viewer } from "./react/Viewer";
+export type { Props, ViewerRef } from "./react/types";
 export { Plugin } from "./core/Plugin";
 export { Manager } from "./core/Manager";
 

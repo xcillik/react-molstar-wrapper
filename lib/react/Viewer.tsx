@@ -7,7 +7,6 @@ import {
   useImperativeHandle,
   type CSSProperties,
 } from "react";
-import "../reset.css";
 import "./style.css";
 import "molstar/lib/mol-plugin-ui/skin/light.scss";
 import LoaderView from "./LoaderView";
@@ -15,23 +14,9 @@ import ErrorView from "./ErrorView";
 import { Manager } from "../core/Manager";
 import { createMVS } from "../core/utils";
 import type { Plugin as P } from "../core/Plugin";
-import type { Props } from "./types";
+import type { Props, ViewerRef } from "./types";
 
 type ViewerState = "loading" | "success" | "error";
-
-export type ViewerRef = {
-  highlight: (domainId: number) => Promise<void>;
-  reset: () => Promise<void>;
-  updateSuperposition: (
-    proteinIndex: number,
-    translation?: [number, number, number],
-    rotation?: [
-      [number, number, number],
-      [number, number, number],
-      [number, number, number],
-    ],
-  ) => Promise<void>;
-};
 
 /**
  * Viewer
@@ -147,11 +132,11 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
     ref,
     () => ({
       highlight: async (domainId: number) => {
-        if (!pluginRef.current || !proteinsRef.current?.[0]?.choppingData) {
+        if (!pluginRef.current || !proteinsRef.current?.[0]?.chopping) {
           return;
         }
 
-        const domain = proteinsRef.current[0].choppingData[domainId];
+        const domain = proteinsRef.current[0].chopping[domainId];
         if (domain) {
           await pluginRef.current.focusOnDomain(domain.start, domain.end);
         }

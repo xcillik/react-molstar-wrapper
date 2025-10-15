@@ -14,7 +14,7 @@ export type Matrix3DFlattened = [
   number,
 ];
 
-type ChoppingData = {
+type Chopping = {
   start: number;
   end: number;
 };
@@ -31,7 +31,7 @@ export type Protein = {
       rotation: Matrix3D;
       translation: Vector3D;
     };
-    choppingData?: ChoppingData[];
+    chopping?: Chopping[];
     representation?:
       | "cartoon"
       | "ball_and_stick"

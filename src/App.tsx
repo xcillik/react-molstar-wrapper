@@ -1,5 +1,5 @@
 import "./globals.css";
-import Viewer, { type ViewerRef } from "./lib/react/Viewer";
+import Viewer, { type ViewerRef } from "../lib/react/Viewer";
 import { useRef, useState, useMemo, useId } from "react";
 
 function App() {

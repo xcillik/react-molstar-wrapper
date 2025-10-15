@@ -4,17 +4,7 @@ Simple React wrapper for MolStar molecular visualization library.
 
 ## Important
 
-## React
-
-Import and use only in **Client Components** since MolStar requires `document` to be defined.
-
 ## Next.js
-
-```typescript
-"use client";
-```
-
-is required!
 
 When using Next.js, import using Next.js's `dynamic` is recommended due to the SSR rendering.\
 An error that `document` is not defined, since MolStar expect it to be defined when importing the plugin.
@@ -44,16 +34,8 @@ Distribution output folder:\
 bun install
 ```
 
-For local lib development:
-
 ```bash
 bun run dev
-```
-
-Build for production:
-
-```bash
-bun run build
 ```
 
 Local test:
@@ -66,12 +48,6 @@ Link it in any other of yours projects to test it:
 
 ```bash
 bun link react-molstar-wrapper
-```
-
-Prepare and pack:
-
-```bash
-bun pm pack
 ```
 
 (TS import)

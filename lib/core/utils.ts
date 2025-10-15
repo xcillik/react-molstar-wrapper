@@ -85,7 +85,7 @@ function createMVSLegacy(
   };
 
   const isDomain = proteins.some(
-    (p) => !!(p.choppingData && p.choppingData.length > 0),
+    (p) => !!(p.chopping && p.chopping.length > 0),
   );
 
   const colors = inferColors(proteins.length, isDomain);
@@ -225,7 +225,7 @@ function createMVS(
   modelSourceUrls: Partial<ModelSourceUrls>,
   plugin?: Plugin,
 ): MVSData {
-  const isDomain = proteins.some((p) => p.choppingData);
+  const isDomain = proteins.some((p) => p.chopping);
   const colors = inferColors(proteins.length, isDomain);
 
   const root = createMVSBuilder();
@@ -266,10 +266,10 @@ function createMVS(
         : { auth_asym_id: protein.chain }
       : "all";
 
-    if (protein.choppingData && protein.choppingData.length > 0) {
+    if (protein.chopping && protein.chopping.length > 0) {
       // Treat choppingData as an array of ranges. Create a component per domain range,
       // then a "rest" component that excludes all ranges.
-      const ranges = protein.choppingData;
+      const ranges = protein.chopping;
 
       // Create domain components for each chopping range
       ranges.forEach((r) => {

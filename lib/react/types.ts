@@ -31,3 +31,17 @@ export type Props = {
     height?: number;
     className?: React.HTMLAttributes<HTMLDivElement>["className"];
   };
+
+export type ViewerRef = {
+  highlight: (domainId: number) => Promise<void>;
+  reset: () => Promise<void>;
+  updateSuperposition: (
+    proteinIndex: number,
+    translation?: [number, number, number],
+    rotation?: [
+      [number, number, number],
+      [number, number, number],
+      [number, number, number],
+    ],
+  ) => Promise<void>;
+};
