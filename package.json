@@ -2,11 +2,29 @@
   "name": "react-molstar-wrapper",
   "private": false,
   "type": "module",
-  "keywords": [],
+  "keywords": [
+    "react",
+    "molstar",
+    "typescript"
+  ],
+  "description": "A React wrapper for Mol* (Molstar) molecular visualization library.",
   "author": {
-    "name": "xcillik"
+    "name": "react-molstar-wrapper maintainers"
   },
-  "license": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xcillik/react-molstar-wrapper"
+  },
+  "bugs": {
+    "url": "https://github.com/xcillik/react-molstar-wrapper/issues"
+  },
+  "homepage": "https://github.com/xcillik/react-molstar-wrapper",
+  "maintainers": [
+    "Jakub Čillík <jakub@cillik.org>",
+    "Romana Ďuráčiová <duraciova@mail.muni.cz>",
+    "Michal Mikuš"
+  ],
   "version": "0.0.1",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",

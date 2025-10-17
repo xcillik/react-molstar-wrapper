@@ -1,141 +1,83 @@
-# react-molstar-wrapper - React wrapper for Mol*
+# react-molstar-wrapper
 
-Simple React wrapper for MolStar molecular visualization library.
+A React wrapper for the Mol* molecular visualization library, providing seamless integration of molecular structure visualization capabilities into React applications.
 
-## Important
+## Overview
 
-## React
+This package provides a lightweight React wrapper around the [Mol*](https://molstar.org/) molecular visualization library, enabling developers to easily integrate 3D molecular structure visualization into their React applications.
 
-Import and use only in **Client Components** since MolStar requires `document` to be defined.
+## Installation
 
-## Next.js
+```bash
+bun install react-molstar-wrapper
+```
+
+## Usage
+
+### React
+
+This component must be used within **Client Components** as Mol* requires the `document` object to be available at runtime.
+
+```typescript
+import Viewer from "react-molstar-wrapper";
+import "react-molstar-wrapper/style.css";
+```
+
+### Next.js Integration
+
+When using Next.js, the component must be imported dynamically to avoid server-side rendering issues. Add the `"use client"` directive and use Next.js's `dynamic` import:
 
 ```typescript
 "use client";
-```
 
-is required!
+import "react-molstar-wrapper/style.css";
+import dynamic from "next/dynamic";
 
-When using Next.js, import using Next.js's `dynamic` is recommended due to the SSR rendering.\
-An error that `document` is not defined, since MolStar expect it to be defined when importing the plugin.
-
-### Examples
-
-```typescript
 const Viewer = dynamic(
   () => import("react-molstar-wrapper").then((mod) => mod.Viewer),
   { ssr: false }
 );
 ```
 
-## Information
+This approach prevents errors related to `document` not being defined during server-side rendering, as Mol* expects the DOM to be available during initialization.
 
-- Package manager - **Bun**
-- TypeScript
-- Linting - **BiomeJS**
-- Formatting - **Prettier**
+### Notice
 
-Distribution output folder:\
-`dist`
-
-## Useful Commands
-
-```bash
-bun install
-```
-
-For local lib development:
-
-```bash
-bun run dev
-```
-
-Build for production:
-
-```bash
-bun run build
-```
-
-Local test:
-
-```bash
-bun link
-```
-
-Link it in any other of yours projects to test it:
-
-```bash
-bun link react-molstar-wrapper
-```
-
-Prepare and pack:
-
-```bash
-bun pm pack
-```
-
-(TS import)
-
-## Code Quality Commands
-
-```bash
-bun run lint
-bun run lint:fix
-
-bun run format:check
-bun run format
-
-bun run type:check
-
-bun run check
-```
-
-## Commit Conventions
-
-Use the following prefixes for commit messages:
-
-- **Fix**: Bug fixes and error corrections
-- **Feat**: New features, feature updates, refactoring
-- **Misc**: Deployment changes, comments, scripts, non-direct fixes
-- **Doc**: Documentation changes
-- **Review**: Small changes during code review
-- **Tests**: Test-related changes
-
-**Examples:**
-
-- `Fix: Resolve protein search query validation`
-- `Feat: Add 3D protein structure visualization`
-- `Misc: Update deployment configuration`
-- `Doc: Update API documentation`
-- `Review: Improve error handling`
-- `Tests: Add unit tests for search functionality`
-
-## Branch Naming
-
-Use descriptive branch names with appropriate prefixes:
-
-- `feature/description` - New features
-- `fix/description` - Bug fixes
-- `misc/description` - Other changes
-- `doc/description` - Documentation updates
-
-**Examples:**
-
-- `feature/protein-search-filters`
-- `fix/3d-viewer-loading-issue`
-- `misc/update-dependencies`
-- `doc/api-documentation`
-
-## Sources
+It is important to include library styles as well! Otherwise loader and error view will be broken.
 
 ```typescript
-import { Viewer as ViewerMolstar } from "molstar/lib/apps/viewer/app.js";
+import "react-molstar-wrapper/style.css";
 ```
 
-https://molstar.org/docs/plugin/instance/#plugincontext-with-built-in-react-ui
+### Example
 
-https://github.com/molstar/molstar/blob/master/src/apps/viewer/app.ts
+```typescript
 
-https://molstar.org/mol-view-spec-docs/mvs-molstar-extension/integration/#construct-mvs-view-on-frontend-and-pass-to-the-viewer
+import "react-molstar-wrapper/style.css";
+import Viewer from "react-molstar-wrapper";
+import type { Protein } from "react-molstar-wrapper";
 
-https://molstar.org/mol-view-spec-docs/mvs-molstar-extension/load-extensions/
+const proteins: Protein[] = [
+  {
+    uniProtId: "P12345";
+  },
+];
+
+<Viewer
+  proteins={proteins}
+  spin={true}
+/>
+```
+
+## Advanced Usage
+
+(TODO)
+
+## Documentation
+
+- [Contributing Guide](CONTRIBUTING.md) - Development setup, code quality, and contribution guidelines
+- [Changelog](CHANGELOG.md) - Version history and release notes
+
+## License
+
+See [LICENSE.md](LICENSE.md) for details.
