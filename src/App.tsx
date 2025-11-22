@@ -1,6 +1,7 @@
 import "./globals.css";
-import Viewer, { type ViewerRef } from "../lib/react/Viewer";
+import Viewer from "../lib/react/Viewer";
 import { useRef, useState, useMemo, useId } from "react";
+import type { ViewerRef } from "../lib";
 
 function App() {
   const viewerRef = useRef<ViewerRef>(null);

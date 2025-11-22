@@ -27,12 +27,12 @@ export default defineConfig({
     sourcemap: true,
     copyPublicDir: false,
     rollupOptions: {
-      external: ['react', 'react-dom', 'molstar'],
+      external: ['react', 'react-dom'],
       output: {
         globals: {
-          react: 'React',
+          react: 'react',
           'react-dom': 'ReactDOM',
-          molstar: 'Molstar'
+          // molstar: 'molstar'
         }
       }
     },

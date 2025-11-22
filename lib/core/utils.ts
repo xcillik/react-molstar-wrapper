@@ -9,7 +9,7 @@ import type {
 import type { MVSData } from "molstar/lib/extensions/mvs/mvs-data.d.ts";
 import type { MVSTree } from "molstar/lib/extensions/mvs/tree/mvs/mvs-tree.d.ts";
 import type { Plugin } from "./Plugin";
-import { createMVSBuilder } from "molstar/lib/extensions/mvs/tree/mvs/mvs-builder";
+import { createMVSBuilder, Root } from "molstar/lib/extensions/mvs/tree/mvs/mvs-builder";
 
 function transposeAndFlatten(matrix: Matrix3D): Matrix3DFlattened {
   return matrix[0].flatMap((_, colIndex) =>
@@ -220,6 +220,203 @@ function createMVSLegacy(
 // CURRENT API BEGIN
 // =====================
 
+function getParseFormat(protein: Protein): "mmcif" | "pdb" {
+  if (!protein.file) {
+    return "mmcif";
+  }
+
+  return protein.file.name.endsWith(".cif") ||
+    protein.file.name.endsWith(".mmcif")
+    ? "mmcif"
+    : "pdb";
+}
+
+function createChainSelector(protein: Protein) {
+  if (!protein.chain) {
+    return "all";
+  }
+
+  return protein.file
+    ? { label_asym_id: protein.chain }
+    : { auth_asym_id: protein.chain };
+}
+
+function createRepresentationParams(
+  protein: Protein,
+  representationType?: string,
+) {
+  const repType = representationType ?? protein.representation ?? "cartoon";
+
+  if (protein.file) {
+    return { size_factor: 1, tubular_helices: false, type: repType };
+  }
+
+  return { type: repType };
+}
+
+function applyRepresentationColor(
+  representation: any,
+  protein: Protein,
+  proteinIndex: number,
+  totalProteins: number,
+  colors: ColorHEX[],
+) {
+  const singleProtein = totalProteins === 1;
+  const defaultRepre = protein.representation ?? "cartoon";
+
+  if (defaultRepre === "cartoon" || defaultRepre === "backbone") {
+    if (singleProtein) {
+      representation.color({
+        custom: {
+          molstar_color_theme_name: "sequence-id",
+          molstar_color_theme_params: {
+            carbonColor: { name: "sequence-id", params: {} },
+          },
+        },
+      });
+    } else {
+      representation.color({
+        color: colors[proteinIndex] ?? "#CCCCCC",
+        selector: "all",
+      });
+    }
+  } else {
+    representation.color({
+      custom: {
+        molstar_color_theme_name: "element-symbol",
+        molstar_color_theme_params: {
+          carbonColor: {
+            name: singleProtein ? "sequence-id" : "element-symbol",
+            params: {},
+          },
+        },
+      },
+    });
+  }
+}
+
+function createDomainSelector(
+  protein: Protein,
+  seqRange?: { beg_auth_seq_id: number; end_auth_seq_id: number },
+) {
+  if (!protein.chain) {
+    return seqRange ?? "all";
+  }
+
+  const chainId = protein.file
+    ? { label_asym_id: protein.chain }
+    : { auth_asym_id: protein.chain };
+
+  return seqRange ? { ...chainId, ...seqRange } : chainId;
+}
+
+function handleDomainChopping(
+  struct: any,
+  protein: Protein,
+  proteinIndex: number,
+  colors: ColorHEX[],
+) {
+  const ranges = protein.chopping!;
+
+  // Create domain components for each chopping range
+  ranges.forEach((r) => {
+    const seqRange = { beg_auth_seq_id: r.start, end_auth_seq_id: r.end };
+    const domainSelector = createDomainSelector(protein, seqRange);
+
+    const domainComp = struct.component({ selector: domainSelector });
+    const domainRepr = domainComp.representation(
+      protein.file ? { size_factor: 1, tubular_helices: false } : {},
+    );
+    domainRepr.color({
+      color: colors[(proteinIndex % 2) + 2]!,
+      selector: "all",
+    });
+  });
+
+  // Build a rest selector that excludes all ranges using an `or` inside `not`.
+  const orArray = ranges.map((r) => ({
+    beg_auth_seq_id: r.start,
+    end_auth_seq_id: r.end,
+  }));
+  const notInner = orArray.length === 1 ? orArray[0] : { or: orArray };
+
+  const restSelector = protein.chain
+    ? protein.file
+      ? { label_asym_id: protein.chain, not: notInner }
+      : { auth_asym_id: protein.chain, not: notInner }
+    : { not: notInner };
+
+  const restComp = struct.component({ selector: restSelector });
+  const restRepr = restComp.representation(
+    protein.file ? { size_factor: 1, tubular_helices: false } : {},
+  );
+  restRepr.color({
+    color: colors[proteinIndex % 2]!,
+    selector: "all",
+  });
+  restRepr.opacity({ opacity: 0.25 });
+}
+
+function handleRegularProtein(
+  struct: any,
+  protein: Protein,
+  proteinIndex: number,
+  totalProteins: number,
+  colors: ColorHEX[],
+) {
+  const selector = createChainSelector(protein);
+  const comp = struct.component({ selector });
+
+  const reprParams = createRepresentationParams(protein);
+  const repr = comp.representation(reprParams);
+
+  applyRepresentationColor(
+    repr,
+    protein,
+    proteinIndex,
+    totalProteins,
+    colors,
+  );
+
+  if (totalProteins >= 3 && proteinIndex > 0) {
+    repr.opacity({ opacity: 0.5 });
+  }
+}
+
+function processProtein(
+  root: Root,
+  protein: Protein,
+  proteinIndex: number,
+  totalProteins: number,
+  colors: ColorHEX[],
+  modelSourceUrls: Partial<ModelSourceUrls>,
+  plugin?: Plugin,
+) {
+  const url = prepareModelSourceUrl(protein, modelSourceUrls, plugin);
+  const download = root.download({ url });
+
+  const parseFormat = getParseFormat(protein);
+  const parse = download.parse({ format: parseFormat });
+
+  const struct = parse.modelStructure(
+    protein.file ? { block_header: null, block_index: 0, model_index: 0 } : {},
+  );
+
+  struct.transform({
+    rotation: transposeAndFlatten(
+      protein.superposition?.rotation ?? DEFAULT_ROTATION,
+    ),
+    translation: protein.superposition?.translation ?? DEFAULT_TRANSLATION,
+    rotation_center: [0, 0, 0],
+  });
+
+  if (protein.chopping && protein.chopping.length > 0) {
+    handleDomainChopping(struct, protein, proteinIndex, colors);
+  } else {
+    handleRegularProtein(struct, protein, proteinIndex, totalProteins, colors);
+  }
+}
+
 function createMVS(
   proteins: Protein[],
   modelSourceUrls: Partial<ModelSourceUrls>,
@@ -233,132 +430,7 @@ function createMVS(
   for (let i = 0; i < proteins.length; i++) {
     // biome-ignore lint/style/noNonNullAssertion: Safe because of loop condition
     const protein = proteins[i]!;
-
-    const url = prepareModelSourceUrl(protein, modelSourceUrls, plugin);
-
-    const download = root.download({ url });
-
-    const parseFormat = protein.file
-      ? protein.file.name.endsWith(".cif") ||
-        protein.file.name.endsWith(".mmcif")
-        ? "mmcif"
-        : "pdb"
-      : "mmcif";
-
-    const parse = download.parse({ format: parseFormat });
-
-    const struct = parse.modelStructure(
-      protein.file
-        ? { block_header: null, block_index: 0, model_index: 0 }
-        : {},
-    );
-
-    struct.transform({
-      rotation: transposeAndFlatten(
-        protein.superposition?.rotation ?? DEFAULT_ROTATION,
-      ),
-      translation: protein.superposition?.translation ?? DEFAULT_TRANSLATION,
-    });
-
-    const selector = protein.chain
-      ? protein.file
-        ? { label_asym_id: protein.chain }
-        : { auth_asym_id: protein.chain }
-      : "all";
-
-    if (protein.chopping && protein.chopping.length > 0) {
-      // Treat choppingData as an array of ranges. Create a component per domain range,
-      // then a "rest" component that excludes all ranges.
-      const ranges = protein.chopping;
-
-      // Create domain components for each chopping range
-      ranges.forEach((r) => {
-        const seqRange = { beg_auth_seq_id: r.start, end_auth_seq_id: r.end };
-        const domainSelector = protein.chain
-          ? protein.file
-            ? { label_asym_id: protein.chain, ...seqRange }
-            : { auth_asym_id: protein.chain, ...seqRange }
-          : seqRange;
-
-        const domainComp = struct.component({ selector: domainSelector });
-        const domainRepr = domainComp.representation(
-          protein.file ? { size_factor: 1, tubular_helices: false } : {},
-        );
-        domainRepr.color({ color: colors[(i % 2) + 2]!, selector: "all" });
-      });
-
-      // Build a rest selector that excludes all ranges using an `or` inside `not`.
-      const orArray = ranges.map((r) => ({
-        beg_auth_seq_id: r.start,
-        end_auth_seq_id: r.end,
-      }));
-      const notInner = orArray.length === 1 ? orArray[0] : { or: orArray };
-
-      const restSelector = protein.chain
-        ? protein.file
-          ? { label_asym_id: protein.chain, not: notInner }
-          : { auth_asym_id: protein.chain, not: notInner }
-        : { not: notInner };
-
-      const restComp = struct.component({ selector: restSelector });
-      const restRepr = restComp.representation(
-        protein.file ? { size_factor: 1, tubular_helices: false } : {},
-      );
-      restRepr.color({ color: colors[i % 2]!, selector: "all" });
-      restRepr.opacity({ opacity: 0.4 });
-    } else {
-      const comp = struct.component({ selector });
-
-      const defaultRepre = protein.representation ?? "cartoon";
-
-      // Build representation params. If a file is present, keep the file-specific params
-      // (size_factor, tubular_helices). Otherwise pass the type from defaultRepre.
-      const reprParams = protein.file
-        ? { size_factor: 1, tubular_helices: false, type: defaultRepre }
-        : { type: defaultRepre };
-
-      const repr = comp.representation(reprParams);
-
-      // Apply color rules:
-      // - If there's only a single protein, use the 'sequence-id' custom theme for
-      //   both 'cartoon' and 'backbone' representations.
-      // - If multiple proteins, keep the per-protein color for 'cartoon' and
-      //   'backbone'.
-      // - For any other representation, use a custom theme: 'sequence-id' for a
-      //   single protein, otherwise 'element-symbol'.
-      const singleProtein = proteins.length === 1;
-
-      if (defaultRepre === "cartoon" || defaultRepre === "backbone") {
-        if (singleProtein) {
-          repr.color({
-            custom: {
-              molstar_color_theme_name: "sequence-id",
-              molstar_color_theme_params: {
-                carbonColor: { name: "sequence-id", params: {} },
-              },
-            },
-          });
-        } else {
-          repr.color({ color: colors[i] ?? "#CCCCCC", selector: "all" });
-        }
-      } else {
-        repr.color({
-          custom: {
-            molstar_color_theme_name: "element-symbol",
-            molstar_color_theme_params: {
-              carbonColor: {
-                name: singleProtein ? "sequence-id" : "element-symbol",
-                params: {},
-              },
-            },
-          },
-        });
-      }
-
-      if (proteins.length >= 3 && i > 0) {
-        repr.opacity({ opacity: 0.5 });
-      }
-    }
+    processProtein(root, protein, i, proteins.length, colors, modelSourceUrls, plugin);
   }
 
   return root.getState({

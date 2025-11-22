@@ -30,8 +30,8 @@ export type Protein = {
     superposition?: {
       rotation: Matrix3D;
       translation: Vector3D;
-    };
-    chopping?: Chopping[];
+    } | undefined;
+    chopping?: Chopping[] | undefined;
     representation?:
       | "cartoon"
       | "ball_and_stick"

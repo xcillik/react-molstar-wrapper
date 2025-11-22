@@ -8,6 +8,14 @@ This package provides a lightweight React wrapper around the [Mol*](https://mols
 
 ## Installation
 
+### npm
+
+```bash
+npm install react-molstar-wrapper
+```
+
+### bun
+
 ```bash
 bun install react-molstar-wrapper
 ```

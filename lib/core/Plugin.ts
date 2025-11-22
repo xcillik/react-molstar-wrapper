@@ -10,6 +10,11 @@ import { MolViewSpec } from "molstar/lib/extensions/mvs/behavior";
 import { DefaultPluginUISpec } from "molstar/lib/mol-plugin-ui/spec";
 import type { InitialUI } from "./types";
 import type { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
+import { Mat4, Vec3 } from "molstar/lib/mol-math/linear-algebra";
+import { PluginStateObject } from "molstar/lib/mol-plugin-state/objects";
+import { Script } from "molstar/lib/mol-script/script";
+import { StructureElement, StructureSelection } from "molstar/lib/mol-model/structure";
+import { StateTransforms } from "molstar/lib/mol-plugin-state/transforms";
 
 class Plugin {
   private plugin: PluginUIContext;
@@ -151,15 +156,6 @@ class Plugin {
   async focusOnDomain(domainStart: number, domainEnd: number) {
     const state = this.plugin.state.data;
 
-    // Import necessary Mol* utilities
-    const { StructureElement, StructureSelection } = await import(
-      "molstar/lib/mol-model/structure"
-    );
-    const { Script } = await import("molstar/lib/mol-script/script");
-    const { PluginStateObject } = await import(
-      "molstar/lib/mol-plugin-state/objects"
-    );
-
     // Find all structure cells in the state tree
     const structures = state.selectQ((q) =>
       q.rootsOfType(PluginStateObject.Molecule.Structure),
@@ -209,15 +205,6 @@ class Plugin {
     rotation?: Matrix3D,
   ) {
     const state = this.plugin.state.data;
-
-    // Import necessary Mol* utilities
-    const { Mat4, Vec3 } = await import("molstar/lib/mol-math/linear-algebra");
-    const { StateTransforms } = await import(
-      "molstar/lib/mol-plugin-state/transforms"
-    );
-    const { PluginStateObject } = await import(
-      "molstar/lib/mol-plugin-state/objects"
-    );
 
     // Find all structure cells in the state tree
     const structures = state.selectQ((q) =>
