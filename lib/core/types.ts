@@ -42,7 +42,7 @@ export type Protein = {
   };
 
 export type ModelSourceUrls = {
-  uniProtId: string;
+  uniProtId: (uniProtId: string) => string;
 };
 
 export type InitialUI = "minimal" | "standard" | "expanded";

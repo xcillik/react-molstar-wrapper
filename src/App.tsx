@@ -50,7 +50,9 @@ function App() {
 
   const modelSourceUrls = useMemo(
     () => ({
-      uniProtId: "https://api.stage.alphafind.dyn.cloud.e-infra.cz/protein",
+      // uniProtId: "https://api.stage.alphafind.dyn.cloud.e-infra.cz/protein",
+      uniProtId: (uniProtId: string) =>
+        `https://api.stage.alphafind.dyn.cloud.e-infra.cz/protein/${uniProtId}`,
     }),
     [],
   );

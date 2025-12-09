@@ -62,7 +62,8 @@ function prepareModelSourceUrl(
 
     url = plugin.createObjectUrlFromFile(protein.file);
   } else if (modelSourceUrls.uniProtId) {
-    url = `${modelSourceUrls.uniProtId}/${protein.uniProtId}`;
+    // url = `${modelSourceUrls.uniProtId}/${protein.uniProtId}`;
+    url = modelSourceUrls.uniProtId(protein.uniProtId);
   } else {
     url = `${defaultModelSourceUrls.uniProtId}/AF-${protein.uniProtId}-F1-model_v6.cif`;
   }
@@ -80,7 +81,8 @@ function createMVSLegacy(
   plugin?: Plugin,
 ): MVSData {
   const _modelSourceUrls = {
-    uniProtId: "https://alphafold.ebi.ac.uk/files",
+    // uniProtId: "https://alphafold.ebi.ac.uk/files",
+    uniProtId: (uniProtId: string) => `https://alphafold.ebi.ac.uk/files/AF-${uniProtId}-F1-model_v6.cif`,
     ...modelSourceUrls,
   };
 
