@@ -14,10 +14,21 @@ export type Matrix3DFlattened = [
   number,
 ];
 
-type Chopping = {
+// type Chopping = {
+//   start: number;
+//   end: number;
+// };
+
+type _Chopping = {
   start: number;
   end: number;
-};
+}[];
+
+type Chopping = {
+  label: string;
+  showLabel: boolean;
+  ranges: _Chopping;
+}[];
 
 export type Protein = {
   // Disjoint union: either provide `uniProtId` (and not `file`) or provide `file` (and not `uniProtId`).
@@ -31,7 +42,7 @@ export type Protein = {
       rotation: Matrix3D;
       translation: Vector3D;
     } | undefined;
-    chopping?: Chopping[] | undefined;
+    chopping?: Chopping | undefined;
     representation?:
       | "cartoon"
       | "ball_and_stick"

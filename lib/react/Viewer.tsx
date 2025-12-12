@@ -14,7 +14,7 @@ import "molstar/lib/mol-plugin-ui/skin/light.scss";
 import LoaderView from "./LoaderView";
 import ErrorView from "./ErrorView";
 import { Manager } from "../core/Manager";
-import { createMVS } from "../core/utils";
+import { createMVS } from "../core/tree";
 import type { Plugin as P } from "../core/Plugin";
 import type { Props, ViewerRef } from "./types";
 
@@ -133,14 +133,21 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
   useImperativeHandle(
     ref,
     () => ({
-      highlight: async (domainId: number) => {
-        if (!pluginRef.current || !proteinsRef.current?.[0]?.chopping) {
+      highlight: async (proteinIndex: number, label: string) => {
+        if (!pluginRef.current || proteinsRef.current === undefined || proteinsRef.current.length <= proteinIndex) {
           return;
         }
 
-        const domain = proteinsRef.current[0].chopping[domainId];
-        if (domain) {
-          await pluginRef.current.focusOnDomain(domain.start, domain.end);
+        const domain = proteinsRef.current[proteinIndex]?.chopping?.find(
+          (d) => d.label === label,
+        );
+        console.log(domain);
+        
+        const start = domain?.ranges[0]?.start;
+        const end = domain?.ranges[0]?.end;
+
+        if (start !== undefined && end !== undefined) {
+          await pluginRef.current.focusOnDomain(start, end);
         }
       },
       reset: async () => {

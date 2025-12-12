@@ -33,7 +33,7 @@ export type Props = {
   };
 
 export type ViewerRef = {
-  highlight: (domainId: number) => Promise<void>;
+  highlight: (proteinIndex: number, label: string) => Promise<void>;
   reset: () => Promise<void>;
   updateSuperposition: (
     proteinIndex: number,

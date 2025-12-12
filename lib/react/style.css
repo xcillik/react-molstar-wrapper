@@ -11,14 +11,6 @@
   box-shadow: none;
 }
 
-.react-molstar.no-controls .msp-layout-main .msp-layout-top {
-  display: none;
-}
-
-.react-molstar.no-controls .msp-viewport-controls {
-  display: none;
-}
-
 .react-molstar canvas {
   max-width: 100%;
   max-height: 100%;
@@ -28,10 +20,14 @@
   border: none;
 }
 
-.react-molstar .msp-plugin .msp-snapshot-description-wrapper {
+
+.react-molstar .msp-state-snapshot-viewport-controls {
   display: none;
 }
 
+.react-molstar.no-controls .msp-layout-main .msp-layout-top,
+.react-molstar.no-controls .msp-viewport-controls,
+.react-molstar .msp-plugin .msp-snapshot-description-wrapper,
 .react-molstar.no-controls .msp-viewport-top-left-controls {
   display: none;
 }
