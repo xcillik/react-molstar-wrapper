@@ -203,11 +203,11 @@ function inferColors(count: number, domains?: number): ColorHEX[] {
   }
 
   if (count === 1) {
-    return [BASE_COLOR_YELLOW];
+    return [BASE_COLOR_BLUE];
   }
 
   if (count === 2) {
-    return [BASE_COLOR_YELLOW, BASE_COLOR_BLUE];
+    return [BASE_COLOR_BLUE, BASE_COLOR_YELLOW];
   }
 
   return [BASE_COLOR_YELLOW, ...Array(count - 1).fill(BASE_COLOR_GREY)];

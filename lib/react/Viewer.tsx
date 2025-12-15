@@ -141,8 +141,6 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
         const domain = proteinsRef.current[proteinIndex]?.chopping?.find(
           (d) => d.label === label,
         );
-        console.log(domain);
-        
         const start = domain?.ranges[0]?.start;
         const end = domain?.ranges[0]?.end;
 

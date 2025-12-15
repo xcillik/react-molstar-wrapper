@@ -113,6 +113,16 @@ const proteins3: Protein[] = [
 const proteins4: Protein[] = [
   {
     uniProtId: "A0A2N7XP94",
+    chopping: [
+      {
+        label: "Domain 1",
+        showLabel: true,
+        ranges: [
+          { start: 1, end: 100 },
+          { start: 150, end: 300 },
+        ],
+      },
+    ],
   },
 ];
 

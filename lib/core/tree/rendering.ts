@@ -8,7 +8,6 @@ import {
   BASE_COLOR_YELLOW,
   getBaseColor,
   getOpacityForProtein,
-  makeShades,
   MULTI_DOMAIN_COLORS,
 } from "./colors";
 import type { NormalizedChoppingEntry } from "./chopping";
@@ -106,7 +105,7 @@ function renderProteinWithChopping(
   } else if (totalProteins === 2 && choppingEntries.length === 1) {
     domainPalette = [backgroundColor];
   } else {
-    domainPalette = makeShades(backgroundColor, choppingEntries.length).slice().reverse();
+    domainPalette = Array(choppingEntries.length).fill(BASE_COLOR_BLUE);
   }
 
   if (useInlineDomainColoring) {
