@@ -100,7 +100,7 @@ function renderProteinWithChopping(
       MULTI_DOMAIN_COLORS[index % MULTI_DOMAIN_COLORS.length]!,
     );
   } else if (totalProteins === 2 && choppingEntries.length >= 2) {
-    const baseColorForDomains = proteinIndex === 0 ? BASE_COLOR_YELLOW : BASE_COLOR_BLUE;
+    const baseColorForDomains = proteinIndex === 0 ? BASE_COLOR_BLUE : BASE_COLOR_YELLOW;
     domainPalette = Array(choppingEntries.length).fill(baseColorForDomains);
   } else if (totalProteins === 2 && choppingEntries.length === 1) {
     domainPalette = [backgroundColor];
@@ -180,7 +180,11 @@ function addDomainLabel(
     beg_auth_seq_id: labelRange.start,
     end_auth_seq_id: labelRange.end,
   });
-  struct.component({ selector: labelSelector }).label({ text: entry.label });
+  console.log(struct.component({ selector: labelSelector }).label);
+  
+  struct.component({ selector: labelSelector }).label({
+    text: entry.label,
+  });
 }
 
 export { renderProteinWithChopping, renderProteinWithoutChopping };
