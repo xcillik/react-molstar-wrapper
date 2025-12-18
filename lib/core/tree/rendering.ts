@@ -180,8 +180,6 @@ function addDomainLabel(
     beg_auth_seq_id: labelRange.start,
     end_auth_seq_id: labelRange.end,
   });
-  console.log(struct.component({ selector: labelSelector }).label);
-  
   struct.component({ selector: labelSelector }).label({
     text: entry.label,
   });

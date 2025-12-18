@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.7
+
+- Cleanup
+
 ## v0.0.6
 
 - Fix: Swap label colors for multiple domains in superposition
