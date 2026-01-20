@@ -116,7 +116,7 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
     height,
     className,
   }: Props,
-  ref,
+  ref
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pluginRef = useRef<P | null>(null);
@@ -134,12 +134,16 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
     ref,
     () => ({
       highlight: async (proteinIndex: number, label: string) => {
-        if (!pluginRef.current || proteinsRef.current === undefined || proteinsRef.current.length <= proteinIndex) {
+        if (
+          !pluginRef.current ||
+          proteinsRef.current === undefined ||
+          proteinsRef.current.length <= proteinIndex
+        ) {
           return;
         }
 
         const domain = proteinsRef.current[proteinIndex]?.chopping?.find(
-          (d) => d.label === label,
+          (d) => d.label === label
         );
         const start = domain?.ranges[0]?.start;
         const end = domain?.ranges[0]?.end;
@@ -161,7 +165,7 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
           [number, number, number],
           [number, number, number],
           [number, number, number],
-        ],
+        ]
       ) => {
         if (!pluginRef.current) {
           return;
@@ -171,11 +175,11 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
         await pluginRef.current.updateStructureTransform(
           proteinIndex,
           translation,
-          rotation,
+          rotation
         );
       },
     }),
-    [],
+    []
   );
 
   useEffect(() => {
@@ -194,7 +198,7 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
       (proteins === undefined && mvs === undefined)
     ) {
       throw new Error(
-        "Either `proteins` or `mvs` must be provided, but not both.",
+        "Either `proteins` or `mvs` must be provided, but not both."
       );
     }
 
@@ -221,7 +225,7 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
         // ensure proteins is defined when mvs is undefined
         if (mvs === undefined && proteins === undefined) {
           throw new Error(
-            "Either `proteins` or `mvs` must be provided, but not both.",
+            "Either `proteins` or `mvs` must be provided, but not both."
           );
         }
 

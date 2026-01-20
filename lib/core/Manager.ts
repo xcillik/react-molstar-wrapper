@@ -46,7 +46,7 @@ class Manager {
 
   async initPlugin(
     container: HTMLElement,
-    initialUI: InitialUI,
+    initialUI: InitialUI
   ): Promise<Plugin> {
     if (this.plugins.has(container)) {
       // biome-ignore lint/style/noNonNullAssertion: Safe because of has() check

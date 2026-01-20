@@ -51,12 +51,13 @@ function normalizeHexColor(hex: ColorHEX): ColorHEX {
     throw new Error("Invalid hex color value");
   }
 
-  const expanded = withoutHash.length === 3
-    ? withoutHash
-        .split("")
-        .map((char) => char + char)
-        .join("")
-    : withoutHash;
+  const expanded =
+    withoutHash.length === 3
+      ? withoutHash
+          .split("")
+          .map((char) => char + char)
+          .join("")
+      : withoutHash;
 
   return `#${expanded.toUpperCase()}` as ColorHEX;
 }
@@ -71,9 +72,9 @@ function hexToRgb(hex: ColorHEX): RGB {
 }
 
 function rgbToHex([r, g, b]: RGB): ColorHEX {
-  const channelToHex = (channel: number) => channel.toString(16).padStart(2, "0");
-  return `#${channelToHex(r)}${channelToHex(g)}${channelToHex(b)}`
-    .toUpperCase() as ColorHEX;
+  const channelToHex = (channel: number) =>
+    channel.toString(16).padStart(2, "0");
+  return `#${channelToHex(r)}${channelToHex(g)}${channelToHex(b)}`.toUpperCase() as ColorHEX;
 }
 
 function mixChannel(value: number, target: number, factor: number) {
@@ -126,7 +127,10 @@ function getBaseColor(colors: ColorHEX[], index: number): ColorHEX {
   return colors[index] ?? BASE_COLOR_GREY;
 }
 
-function getOpacityForProtein(index: number, totalProteins: number): number | undefined {
+function getOpacityForProtein(
+  index: number,
+  totalProteins: number
+): number | undefined {
   if (totalProteins < 3 || index === 0) {
     return undefined;
   }
@@ -135,18 +139,21 @@ function getOpacityForProtein(index: number, totalProteins: number): number | un
   const step = range / (totalProteins - 1);
   return Math.max(
     MULTI_PROTEIN_OPACITY_MIN,
-    MULTI_PROTEIN_OPACITY_MAX - (index - 1) * step,
+    MULTI_PROTEIN_OPACITY_MAX - (index - 1) * step
   );
 }
 
 function applyFlatColor(
   representation: any,
   color: ColorHEX,
-  selector?: ComponentSelectorT | ComponentExpressionT | ComponentExpressionT[],
+  selector?: ComponentSelectorT | ComponentExpressionT | ComponentExpressionT[]
 ) {
   const params: {
     color: ColorHEX;
-    selector?: ComponentSelectorT | ComponentExpressionT | ComponentExpressionT[];
+    selector?:
+      | ComponentSelectorT
+      | ComponentExpressionT
+      | ComponentExpressionT[];
   } = { color };
 
   if (selector) {
@@ -159,7 +166,7 @@ function applyFlatColor(
 function applyAlphaFoldConfidenceColor(
   struct: any,
   component: any,
-  representation: any,
+  representation: any
 ) {
   representation.colorFromSource({
     schema: "all_atomic",
@@ -196,7 +203,9 @@ function inferColors(count: number, domains?: number): ColorHEX[] {
 
   if (domains !== undefined) {
     if (domains <= 1) {
-      throw new Error("At least two domains are required to infer domain colors");
+      throw new Error(
+        "At least two domains are required to infer domain colors"
+      );
     }
 
     return ["#FF999C", "#C8EAFF", "#8D272B", "#86AEC6"];

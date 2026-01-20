@@ -6,7 +6,9 @@ type NormalizedChoppingEntry = {
   ranges: { start: number; end: number }[];
 };
 
-function normalizeChoppingData(chopping?: Protein["chopping"]): NormalizedChoppingEntry[] {
+function normalizeChoppingData(
+  chopping?: Protein["chopping"]
+): NormalizedChoppingEntry[] {
   if (!chopping) {
     return [];
   }
@@ -20,7 +22,9 @@ function normalizeChoppingData(chopping?: Protein["chopping"]): NormalizedChoppi
           start: Math.min(range.start, range.end),
           end: Math.max(range.start, range.end),
         }))
-        .filter((range) => Number.isFinite(range.start) && Number.isFinite(range.end)),
+        .filter(
+          (range) => Number.isFinite(range.start) && Number.isFinite(range.end)
+        ),
     }))
     .filter((entry) => entry.ranges.length > 0);
 }

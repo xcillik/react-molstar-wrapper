@@ -1,5 +1,8 @@
 # react-molstar-wrapper
 
+[![npm version](https://img.shields.io/npm/v/@e-infra/react-molstar-wrapper.svg)](https://www.npmjs.com/package/@e-infra/react-molstar-wrapper)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A React wrapper for the Mol* molecular visualization library, providing seamless integration of molecular structure visualization capabilities into React applications.
 
 ## Overview

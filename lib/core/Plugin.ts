@@ -13,7 +13,10 @@ import type { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 import { Mat4, Vec3 } from "molstar/lib/mol-math/linear-algebra";
 import { PluginStateObject } from "molstar/lib/mol-plugin-state/objects";
 import { Script } from "molstar/lib/mol-script/script";
-import { StructureElement, StructureSelection } from "molstar/lib/mol-model/structure";
+import {
+  StructureElement,
+  StructureSelection,
+} from "molstar/lib/mol-model/structure";
 import { StateTransforms } from "molstar/lib/mol-plugin-state/transforms";
 
 class Plugin {
@@ -31,7 +34,7 @@ class Plugin {
    */
   static async create(
     container: HTMLElement,
-    initialUI: InitialUI,
+    initialUI: InitialUI
   ): Promise<Plugin> {
     const defaultSpec = DefaultPluginUISpec();
 
@@ -158,7 +161,7 @@ class Plugin {
 
     // Find all structure cells in the state tree
     const structures = state.selectQ((q) =>
-      q.rootsOfType(PluginStateObject.Molecule.Structure),
+      q.rootsOfType(PluginStateObject.Molecule.Structure)
     );
 
     if (structures.length === 0) {
@@ -183,7 +186,7 @@ class Plugin {
             domainEnd,
           ]),
         }),
-      structureData,
+      structureData
     );
 
     const loci = StructureSelection.toLociWithSourceUnits(selection);
@@ -202,13 +205,13 @@ class Plugin {
   async updateStructureTransform(
     structureIndex: number,
     translation?: Vector3D,
-    rotation?: Matrix3D,
+    rotation?: Matrix3D
   ) {
     const state = this.plugin.state.data;
 
     // Find all structure cells in the state tree
     const structures = state.selectQ((q) =>
-      q.rootsOfType(PluginStateObject.Molecule.Structure),
+      q.rootsOfType(PluginStateObject.Molecule.Structure)
     );
 
     if (structureIndex >= structures.length) {
@@ -225,7 +228,7 @@ class Plugin {
     const transforms = allCells.filter(
       (cell) =>
         cell.transform.transformer ===
-        StateTransforms.Model.TransformStructureConformation,
+        StateTransforms.Model.TransformStructureConformation
     );
 
     // Match transform by structure index (assumes structures and transforms are in same order)
@@ -253,7 +256,7 @@ class Plugin {
       if (translation) {
         Mat4.setTranslation(
           matrix,
-          Vec3.create(translation[0], translation[1], translation[2]),
+          Vec3.create(translation[0], translation[1], translation[2])
         );
       }
 
@@ -272,7 +275,7 @@ class Plugin {
                 transpose: false,
               },
             },
-          }),
+          })
         );
 
       await this.plugin.runTask(state.updateTree(update));

@@ -42,6 +42,6 @@ export type ViewerRef = {
       [number, number, number],
       [number, number, number],
       [number, number, number],
-    ],
+    ]
   ) => Promise<void>;
 };

@@ -8,13 +8,21 @@ import type {
 } from "../types";
 import type { MVSData } from "molstar/lib/extensions/mvs/mvs-data.d.ts";
 import type { Plugin } from "../Plugin";
-import { createMVSBuilder, Root } from "molstar/lib/extensions/mvs/tree/mvs/mvs-builder";
+import {
+  createMVSBuilder,
+  Root,
+} from "molstar/lib/extensions/mvs/tree/mvs/mvs-builder";
 import { normalizeChoppingData } from "./chopping";
 import { inferColors } from "./colors";
-import { renderProteinWithChopping, renderProteinWithoutChopping } from "./rendering";
+import {
+  renderProteinWithChopping,
+  renderProteinWithoutChopping,
+} from "./rendering";
 
 function transposeAndFlatten(matrix: Matrix3D): Matrix3DFlattened {
-  return matrix[0].flatMap((_, colIndex) => matrix.map((row) => row[colIndex])) as Matrix3DFlattened;
+  return matrix[0].flatMap((_, colIndex) =>
+    matrix.map((row) => row[colIndex])
+  ) as Matrix3DFlattened;
 }
 
 const DEFAULT_ROTATION: Matrix3D = [
@@ -27,7 +35,7 @@ const DEFAULT_TRANSLATION: Vector3D = [0, 0, 0];
 function prepareModelSourceUrl(
   protein: Protein,
   modelSourceUrls: Partial<ModelSourceUrls>,
-  plugin?: Plugin,
+  plugin?: Plugin
 ) {
   const defaultModelSourceUrls = {
     uniProtId: "https://alphafold.ebi.ac.uk/files",
@@ -37,7 +45,9 @@ function prepareModelSourceUrl(
 
   if (protein.file) {
     if (!plugin) {
-      throw new Error("Plugin instance is required to create object URL from file");
+      throw new Error(
+        "Plugin instance is required to create object URL from file"
+      );
     }
 
     url = plugin.createObjectUrlFromFile(protein.file);
@@ -55,7 +65,8 @@ function getParseFormat(protein: Protein): "mmcif" | "pdb" {
     return "mmcif";
   }
 
-  return protein.file.name.endsWith(".cif") || protein.file.name.endsWith(".mmcif")
+  return protein.file.name.endsWith(".cif") ||
+    protein.file.name.endsWith(".mmcif")
     ? "mmcif"
     : "pdb";
 }
@@ -67,7 +78,7 @@ function processProtein(
   totalProteins: number,
   colors: ColorHEX[],
   modelSourceUrls: Partial<ModelSourceUrls>,
-  plugin?: Plugin,
+  plugin?: Plugin
 ) {
   const url = prepareModelSourceUrl(protein, modelSourceUrls, plugin);
   const download = root.download({ url });
@@ -76,30 +87,44 @@ function processProtein(
   const parse = download.parse({ format: parseFormat });
 
   const struct = parse.modelStructure(
-    protein.file ? { block_header: null, block_index: 0, model_index: 0 } : {},
+    protein.file ? { block_header: null, block_index: 0, model_index: 0 } : {}
   );
 
   struct.transform({
-    rotation: transposeAndFlatten(protein.superposition?.rotation ?? DEFAULT_ROTATION),
+    rotation: transposeAndFlatten(
+      protein.superposition?.rotation ?? DEFAULT_ROTATION
+    ),
     translation: protein.superposition?.translation ?? DEFAULT_TRANSLATION,
     rotation_center: [0, 0, 0],
   });
 
-  const choppingEntries = totalProteins >= 3
-    ? []
-    : normalizeChoppingData(protein.chopping);
+  const choppingEntries =
+    totalProteins >= 3 ? [] : normalizeChoppingData(protein.chopping);
 
   if (choppingEntries.length > 0) {
-    renderProteinWithChopping(struct, protein, proteinIndex, totalProteins, colors, choppingEntries);
+    renderProteinWithChopping(
+      struct,
+      protein,
+      proteinIndex,
+      totalProteins,
+      colors,
+      choppingEntries
+    );
   } else {
-    renderProteinWithoutChopping(struct, protein, proteinIndex, totalProteins, colors);
+    renderProteinWithoutChopping(
+      struct,
+      protein,
+      proteinIndex,
+      totalProteins,
+      colors
+    );
   }
 }
 
 function createMVS(
   proteins: Protein[],
   modelSourceUrls: Partial<ModelSourceUrls>,
-  plugin?: Plugin,
+  plugin?: Plugin
 ): MVSData {
   const colors = inferColors(proteins.length);
 
@@ -107,7 +132,15 @@ function createMVS(
 
   for (let i = 0; i < proteins.length; i++) {
     const protein = proteins[i]!;
-    processProtein(root, protein, i, proteins.length, colors, modelSourceUrls, plugin);
+    processProtein(
+      root,
+      protein,
+      i,
+      proteins.length,
+      colors,
+      modelSourceUrls,
+      plugin
+    );
   }
 
   return root.getState({

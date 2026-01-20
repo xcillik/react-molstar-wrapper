@@ -38,10 +38,12 @@ export type Protein = {
   | { file: File; uniProtId?: never }
 ) & {
     chain?: string;
-    superposition?: {
-      rotation: Matrix3D;
-      translation: Vector3D;
-    } | undefined;
+    superposition?:
+      | {
+          rotation: Matrix3D;
+          translation: Vector3D;
+        }
+      | undefined;
     chopping?: Chopping | undefined;
     representation?:
       | "cartoon"

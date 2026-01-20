@@ -208,7 +208,7 @@ function App() {
   const eulerToRotationMatrix = (
     rx: number,
     ry: number,
-    rz: number,
+    rz: number
   ): [
     [number, number, number],
     [number, number, number],
@@ -238,9 +238,9 @@ function App() {
   const modelSourceUrls = useMemo(
     () => ({
       uniProtId: (uniProtId: string) =>
-        `https://alphafold.ebi.ac.uk/files/AF-${uniProtId}-F1-model_v4.pdb`,
+        `https://alphafold.ebi.ac.uk/files/AF-${uniProtId}-F1-model_v6.cif`,
     }),
-    [],
+    []
   );
 
   // const handleDomainHover = (domainId: number) => {
@@ -272,7 +272,7 @@ function App() {
     const rotationMatrix = eulerToRotationMatrix(
       rotationX,
       rotationY,
-      rotationZ,
+      rotationZ
     );
     viewerRef.current?.updateSuperposition(0, newTranslation, rotationMatrix);
   };
@@ -294,7 +294,7 @@ function App() {
     const rotationMatrix = eulerToRotationMatrix(
       newRotation.x,
       newRotation.y,
-      newRotation.z,
+      newRotation.z
     );
     const translation: [number, number, number] = [
       translationX,
@@ -358,7 +358,7 @@ function App() {
                 onChange={(e) =>
                   handleTranslationChange(
                     "x",
-                    Number.parseFloat(e.target.value),
+                    Number.parseFloat(e.target.value)
                   )
                 }
                 className="w-full"
@@ -381,7 +381,7 @@ function App() {
                 onChange={(e) =>
                   handleTranslationChange(
                     "y",
-                    Number.parseFloat(e.target.value),
+                    Number.parseFloat(e.target.value)
                   )
                 }
                 className="w-full"
@@ -404,7 +404,7 @@ function App() {
                 onChange={(e) =>
                   handleTranslationChange(
                     "z",
-                    Number.parseFloat(e.target.value),
+                    Number.parseFloat(e.target.value)
                   )
                 }
                 className="w-full"

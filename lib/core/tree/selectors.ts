@@ -16,7 +16,7 @@ function getRepresentationType(protein: Protein, representationType?: string) {
 
 function createRepresentationParams(
   protein: Protein,
-  representationType?: string,
+  representationType?: string
 ) {
   const repType = getRepresentationType(protein, representationType);
 
@@ -33,7 +33,7 @@ function isCartoonLikeRepresentation(repType: string) {
 
 function createDomainSelector(
   protein: Protein,
-  seqRange?: { beg_auth_seq_id: number; end_auth_seq_id: number },
+  seqRange?: { beg_auth_seq_id: number; end_auth_seq_id: number }
 ) {
   if (!protein.chain) {
     return seqRange ?? "all";

@@ -26,12 +26,14 @@ function renderProteinWithoutChopping(
   protein: Protein,
   proteinIndex: number,
   totalProteins: number,
-  colors: ColorHEX[],
+  colors: ColorHEX[]
 ) {
   const selector = createChainSelector(protein);
   const comp = struct.component({ selector });
   const repType = getRepresentationType(protein);
-  const repr = comp.representation(createRepresentationParams(protein, repType));
+  const repr = comp.representation(
+    createRepresentationParams(protein, repType)
+  );
 
   if (totalProteins === 1) {
     if (isCartoonLikeRepresentation(repType)) {
@@ -69,7 +71,7 @@ function renderProteinWithChopping(
   proteinIndex: number,
   totalProteins: number,
   colors: ColorHEX[],
-  choppingEntries: NormalizedChoppingEntry[],
+  choppingEntries: NormalizedChoppingEntry[]
 ) {
   if (choppingEntries.length === 0) {
     return;
@@ -91,16 +93,18 @@ function renderProteinWithChopping(
   applyFlatColor(baseRepr, backgroundColor);
   baseRepr.opacity({ opacity: restOpacity });
 
-  const useInlineDomainColoring = totalProteins === 1 && choppingEntries.length >= 2;
+  const useInlineDomainColoring =
+    totalProteins === 1 && choppingEntries.length >= 2;
 
   let domainPalette: ColorHEX[];
 
   if (totalProteins === 1 && choppingEntries.length >= 2) {
-    domainPalette = choppingEntries.map((_, index) =>
-      MULTI_DOMAIN_COLORS[index % MULTI_DOMAIN_COLORS.length]!,
+    domainPalette = choppingEntries.map(
+      (_, index) => MULTI_DOMAIN_COLORS[index % MULTI_DOMAIN_COLORS.length]!
     );
   } else if (totalProteins === 2 && choppingEntries.length >= 2) {
-    const baseColorForDomains = proteinIndex === 0 ? BASE_COLOR_BLUE : BASE_COLOR_YELLOW;
+    const baseColorForDomains =
+      proteinIndex === 0 ? BASE_COLOR_BLUE : BASE_COLOR_YELLOW;
     domainPalette = Array(choppingEntries.length).fill(baseColorForDomains);
   } else if (totalProteins === 2 && choppingEntries.length === 1) {
     domainPalette = [backgroundColor];
@@ -125,7 +129,7 @@ function applyDomainColor(
   representation: any,
   protein: Protein,
   entry: NormalizedChoppingEntry,
-  color: ColorHEX,
+  color: ColorHEX
 ) {
   if (entry.ranges.length === 0) {
     return;
@@ -147,7 +151,7 @@ function renderDomainEntry(
   struct: any,
   protein: Protein,
   entry: NormalizedChoppingEntry,
-  color: ColorHEX,
+  color: ColorHEX
 ) {
   const reprParams = createRepresentationParams(protein);
 
@@ -168,7 +172,7 @@ function renderDomainEntry(
 function addDomainLabel(
   struct: any,
   protein: Protein,
-  entry: NormalizedChoppingEntry,
+  entry: NormalizedChoppingEntry
 ) {
   if (!entry.showLabel || entry.ranges.length === 0) {
     return;

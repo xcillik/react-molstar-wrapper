@@ -1,4 +1,4 @@
-The MIT License
+# The MIT License
 
 Copyright 2025 - now, react-molstar-wrapper contributors
 

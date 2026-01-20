@@ -47,7 +47,7 @@
     "useUnknownInCatchVariables": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "alwaysStrict": true,
+    "alwaysStrict": true
   },
   "include": ["src", "lib"]
 }
