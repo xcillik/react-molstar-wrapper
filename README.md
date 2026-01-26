@@ -60,13 +60,13 @@ This package provides a lightweight React wrapper around the [Mol*](https://mols
 ### npm
 
 ```bash
-npm install react-molstar-wrapper
+npm install @e-infra/react-molstar-wrapper
 ```
 
 ### bun
 
 ```bash
-bun install react-molstar-wrapper
+bun install @e-infra/react-molstar-wrapper
 ```
 
 ## Usage
@@ -76,8 +76,8 @@ bun install react-molstar-wrapper
 This component must be used within **Client Components** as Mol* requires the `document` object to be available at runtime.
 
 ```typescript
-import Viewer from "react-molstar-wrapper";
-import "react-molstar-wrapper/style.css";
+import Viewer from "@e-infra/react-molstar-wrapper";
+import "@e-infra/react-molstar-wrapper/style.css";
 ```
 
 ### Next.js Integration
@@ -87,11 +87,11 @@ When using Next.js, the component must be imported dynamically to avoid server-s
 ```typescript
 "use client";
 
-import "react-molstar-wrapper/style.css";
+import "@e-infra/react-molstar-wrapper/style.css";
 import dynamic from "next/dynamic";
 
 const Viewer = dynamic(
-  () => import("react-molstar-wrapper").then((mod) => mod.Viewer),
+  () => import("@e-infra/react-molstar-wrapper").then((mod) => mod.Viewer),
   { ssr: false }
 );
 ```
@@ -102,8 +102,9 @@ This approach prevents errors related to `document` not being defined during ser
 
 > [!IMPORTANT]
 > It is important to include library styles as well! Otherwise loader and error view will be broken.
+>
 > ```typescript
-> import "react-molstar-wrapper/style.css";
+> import "@e-infra/react-molstar-wrapper/style.css";
 > ```
 
 ## Props
@@ -209,9 +210,9 @@ type Chopping = {
 ### Basic Example
 
 ```typescript
-import "react-molstar-wrapper/style.css";
-import Viewer from "react-molstar-wrapper";
-import type { Protein } from "react-molstar-wrapper";
+import "@e-infra/react-molstar-wrapper/style.css";
+import Viewer from "@e-infra/react-molstar-wrapper";
+import type { Protein } from "@e-infra/react-molstar-wrapper";
 
 const proteins: Protein[] = [
   {
@@ -232,9 +233,9 @@ function App() {
 ### Example with Multiple Proteins and Custom Styling
 
 ```typescript
-import "react-molstar-wrapper/style.css";
-import Viewer from "react-molstar-wrapper";
-import type { Protein } from "react-molstar-wrapper";
+import "@e-infra/react-molstar-wrapper/style.css";
+import Viewer from "@e-infra/react-molstar-wrapper";
+import type { Protein } from "@e-infra/react-molstar-wrapper";
 
 const proteins: Protein[] = [
   {
@@ -282,9 +283,9 @@ function App() {
 ### Example with Ref Methods
 
 ```typescript
-import "react-molstar-wrapper/style.css";
-import Viewer, { type ViewerRef } from "react-molstar-wrapper";
-import type { Protein } from "react-molstar-wrapper";
+import "@e-infra/react-molstar-wrapper/style.css";
+import Viewer, { type ViewerRef } from "@e-infra/react-molstar-wrapper";
+import type { Protein } from "@e-infra/react-molstar-wrapper";
 import { useRef } from "react";
 
 const proteins: Protein[] = [
@@ -343,9 +344,9 @@ function App() {
 ### Example with Rock Animation
 
 ```typescript
-import "react-molstar-wrapper/style.css";
-import Viewer from "react-molstar-wrapper";
-import type { Protein } from "react-molstar-wrapper";
+import "@e-infra/react-molstar-wrapper/style.css";
+import Viewer from "@e-infra/react-molstar-wrapper";
+import type { Protein } from "@e-infra/react-molstar-wrapper";
 
 const proteins: Protein[] = [
   {
@@ -368,9 +369,9 @@ function App() {
 ### Example with Local File
 
 ```typescript
-import "react-molstar-wrapper/style.css";
-import Viewer from "react-molstar-wrapper";
-import type { Protein } from "react-molstar-wrapper";
+import "@e-infra/react-molstar-wrapper/style.css";
+import Viewer from "@e-infra/react-molstar-wrapper";
+import type { Protein } from "@e-infra/react-molstar-wrapper";
 import { useState } from "react";
 
 function App() {
@@ -400,9 +401,9 @@ function App() {
 ### Example with Custom Model Source URLs
 
 ```typescript
-import "react-molstar-wrapper/style.css";
-import Viewer from "react-molstar-wrapper";
-import type { Protein } from "react-molstar-wrapper";
+import "@e-infra/react-molstar-wrapper/style.css";
+import Viewer from "@e-infra/react-molstar-wrapper";
+import type { Protein } from "@e-infra/react-molstar-wrapper";
 
 const proteins: Protein[] = [
   {
@@ -432,8 +433,8 @@ function App() {
 If you have precomputed MVS (Mol* View State) data, you can pass it directly to the viewer:
 
 ```typescript
-import "react-molstar-wrapper/style.css";
-import Viewer from "react-molstar-wrapper";
+import "@e-infra/react-molstar-wrapper/style.css";
+import Viewer from "@e-infra/react-molstar-wrapper";
 import type { MVSData } from "molstar/lib/extensions/mvs/mvs-data.d.ts";
 
 const mvsData: MVSData = {
@@ -453,9 +454,9 @@ function App() {
 ### Combining Multiple Features
 
 ```typescript
-import "react-molstar-wrapper/style.css";
-import Viewer, { type ViewerRef } from "react-molstar-wrapper";
-import type { Protein } from "react-molstar-wrapper";
+import "@e-infra/react-molstar-wrapper/style.css";
+import Viewer, { type ViewerRef } from "@e-infra/react-molstar-wrapper";
+import type { Protein } from "@e-infra/react-molstar-wrapper";
 import { useRef, useEffect } from "react";
 
 const proteins: Protein[] = [
