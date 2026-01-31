@@ -2,193 +2,16 @@ import "./globals.css";
 import Viewer from "../lib/react/Viewer";
 import { useRef, useState, useMemo, useId } from "react";
 import type { Protein, ViewerRef } from "../lib";
+import {
+  proteins1,
+  proteins2,
+  proteins3,
+  proteins4,
+  proteins5,
+  proteins6,
+} from "./proteins";
 
-const proteins1: Protein[] = [
-  {
-    uniProtId: "P69905",
-  },
-  {
-    uniProtId: "A0A2J8INE6",
-    superposition: {
-      rotation: [
-        [1, 0, 0],
-        [0, 1, 0],
-        [0, 0, 1],
-      ] as [
-        [number, number, number],
-        [number, number, number],
-        [number, number, number],
-      ],
-      translation: [0, 0, 0] as [number, number, number],
-    },
-  },
-];
-
-const proteins2: Protein[] = [
-  {
-    uniProtId: "A0A2N7XP94",
-    chopping: [
-      {
-        label: "Domain 1",
-        showLabel: true,
-        ranges: [
-          { start: 1, end: 5 },
-          { start: 10, end: 45 },
-        ],
-      },
-      {
-        label: "Domain 2",
-        showLabel: false,
-        ranges: [{ start: 400, end: 500 }],
-      },
-      {
-        label: "Domain 3",
-        showLabel: false,
-        ranges: [{ start: 530, end: 570 }],
-      },
-      {
-        label: "Domain 4",
-        showLabel: false,
-        ranges: [{ start: 600, end: 680 }],
-      },
-      {
-        label: "Domain 5",
-        showLabel: false,
-        ranges: [{ start: 720, end: 850 }],
-      },
-      {
-        label: "Domain 6",
-        showLabel: false,
-        ranges: [{ start: 900, end: 950 }],
-      },
-    ],
-  },
-  {
-    uniProtId: "A0A502HNZ2",
-    chopping: [
-      {
-        label: "Domain 1",
-        showLabel: false,
-        ranges: [{ start: 1, end: 30 }],
-      },
-      {
-        label: "Domain 2",
-        showLabel: false,
-        ranges: [{ start: 100, end: 160 }],
-      },
-      {
-        label: "Domain 3",
-        showLabel: false,
-        ranges: [{ start: 180, end: 230 }],
-      },
-      {
-        label: "Domain 4",
-        showLabel: false,
-        ranges: [{ start: 250, end: 300 }],
-      },
-      {
-        label: "Domain 5",
-        showLabel: false,
-        ranges: [{ start: 320, end: 380 }],
-      },
-      {
-        label: "Domain 6",
-        showLabel: false,
-        ranges: [{ start: 400, end: 450 }],
-      },
-    ],
-  },
-  // { uniProtId: "P68871" },
-];
-
-const proteins3: Protein[] = [
-  {
-    uniProtId: "A0A2N7XP94",
-    // representation: "ball_and_stick" as const,
-  },
-  { uniProtId: "A0A448DWS8" },
-  { uniProtId: "A0A2T5SU65" },
-];
-
-const proteins4: Protein[] = [
-  {
-    uniProtId: "A0A2N7XP94",
-    chopping: [
-      {
-        label: "Domain 1",
-        showLabel: true,
-        ranges: [
-          { start: 1, end: 100 },
-          { start: 150, end: 300 },
-        ],
-      },
-    ],
-  },
-];
-
-const proteins5: Protein[] = [
-  {
-    uniProtId: "A0A2J8INE6",
-    chopping: [
-      {
-        label: "Domain 1",
-        showLabel: false,
-        ranges: [{ start: 1, end: 50 }],
-      },
-    ],
-  },
-  {
-    uniProtId: "P68871",
-    chopping: [
-      {
-        label: "Hemoglobin subunit beta",
-        showLabel: false,
-        ranges: [{ start: 1, end: 60 }],
-      },
-    ],
-  },
-];
-
-const proteins6 = [
-  {
-    uniProtId: "A0A2N7XP94",
-    chopping: [
-      {
-        label: "Domain 1",
-        showLabel: true,
-        ranges: [
-          { start: 1, end: 5 },
-          { start: 10, end: 45 },
-        ],
-      },
-      {
-        label: "Domain 2",
-        showLabel: true,
-        ranges: [{ start: 400, end: 500 }],
-      },
-      {
-        label: "Domain 3",
-        showLabel: true,
-        ranges: [{ start: 530, end: 570 }],
-      },
-      {
-        label: "Domain 4",
-        showLabel: true,
-        ranges: [{ start: 600, end: 680 }],
-      },
-      {
-        label: "Domain 5",
-        showLabel: true,
-        ranges: [{ start: 720, end: 850 }],
-      },
-      {
-        label: "Domain 6",
-        showLabel: true,
-        ranges: [{ start: 900, end: 950 }],
-      },
-    ],
-  },
-];
+const viewerHeight = 400;
 
 function App() {
   const viewerRef = useRef<ViewerRef>(null);
@@ -246,8 +69,8 @@ function App() {
     []
   );
 
-  const handleDomainHover = (domainId: number) => {
-    viewerRef.current?.highlight(0, `Domain ${domainId}`);
+  const handleDomainHover = (proteinIndex: number, domainId: number) => {
+    viewerRef.current?.highlight(proteinIndex, `Domain ${domainId}`);
   };
 
   const handleDomainLeave = () => {
@@ -309,217 +132,263 @@ function App() {
 
   return (
     <div className="w-screen p-4">
+      <h1 className="text-2xl font-bold mb-4">React Molstar Showcase</h1>
       <div className="flex flex-wrap -mx-2">
+        {/* Single protein with chopping */}
         <div className="w-full md:w-1/3 px-2 mb-4">
+          <h2 className="text-lg font-semibold mb-1">Single Protein</h2>
+          <p className="text-sm text-gray-600 mb-3">
+            Display a single protein with domain chopping.
+          </p>
           <Viewer
             proteins={proteins4}
             modelSourceUrls={modelSourceUrls}
-            // spin={true}
-            height={600}
-            // bgColor="#FFFFFF"
+            height={viewerHeight}
           />
         </div>
+
+        {/* Labels toggle and sliders */}
         <div className="w-full md:w-1/3 px-2 mb-4">
-          <div className="mb-4">
+          <h2 className="text-lg font-semibold mb-1">Labels & Controls</h2>
+          <p className="text-sm text-gray-600 mb-3">
+            Toggle labels and adjust superposition with sliders.
+          </p>
+          <Viewer
+            ref={viewerRef}
+            proteins={proteins2}
+            modelSourceUrls={modelSourceUrls}
+            height={viewerHeight}
+            labels={labelsVisible}
+          />
+          <div className="mt-3">
             <button
               onClick={() => setLabelsVisible(!labelsVisible)}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="px-4 py-2 bg-slate-600 text-white rounded-md hover:bg-slate-700 transition-colors duration-200 text-sm font-medium"
             >
               Toggle Labels {labelsVisible ? "Off" : "On"}
             </button>
           </div>
-          <Viewer
-            ref={viewerRef}
-            // proteins={proteins6}
-            proteins={proteins2}
-            modelSourceUrls={modelSourceUrls}
-            // rock={true}
-            height={600}
-            // bgColor="#00FF00"
-            labels={labelsVisible}
-          />
 
-          <div
-            onMouseEnter={() => handleDomainHover(1)}
-            onMouseLeave={() => handleDomainLeave()}
-          >1</div>
-          {/* <div
-            onMouseEnter={() => handleDomainHover(2)}
-            onMouseLeave={() => handleDomainLeave()}
-          >2</div>
-          <div
-            onMouseEnter={() => handleDomainHover(3)}
-            onMouseLeave={() => handleDomainLeave()}
-          >3</div> */}
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="text-xs text-slate-600 font-medium">Hover domains:</span>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-[10px] text-slate-500 mr-1">Query:</span>
+              {[1, 2].map((domainId) => (
+                <button
+                  key={`q-${domainId}`}
+                  onMouseEnter={() => handleDomainHover(0, domainId)}
+                  onMouseLeave={handleDomainLeave}
+                  className="px-2 py-1 bg-slate-100 text-slate-700 text-xs rounded-md border border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors"
+                >
+                  D{domainId}
+                </button>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-[10px] text-slate-500 mr-1">Target:</span>
+              {[1, 2, 3, 4, 5, 6].map((domainId) => (
+                <button
+                  key={`t-${domainId}`}
+                  onMouseEnter={() => handleDomainHover(1, domainId)}
+                  onMouseLeave={handleDomainLeave}
+                  className="px-2 py-1 bg-slate-100 text-slate-700 text-xs rounded-md border border-slate-200 hover:bg-slate-200 hover:border-slate-300 transition-colors"
+                >
+                  D{domainId}
+                </button>
+              ))}
+            </div>
+          </div>
 
-          <div className="mt-4 p-4 bg-gray-100 rounded">
-            <h3 className="font-bold mb-3">Translation</h3>
-            <div className="mb-3">
-              <label
-                htmlFor={`${rotationIdBase}-tx`}
-                className="block text-sm font-medium mb-1"
-              >
-                X: {translationX.toFixed(2)}
-              </label>
-              <input
-                id={`${rotationIdBase}-tx`}
-                type="range"
-                min="-100"
-                max="100"
-                step="1"
-                value={translationX}
-                onChange={(e) =>
-                  handleTranslationChange(
-                    "x",
-                    Number.parseFloat(e.target.value)
-                  )
-                }
-                className="w-full"
-              />
-            </div>
-            <div className="mb-3">
-              <label
-                htmlFor={`${rotationIdBase}-ty`}
-                className="block text-sm font-medium mb-1"
-              >
-                Y: {translationY.toFixed(2)}
-              </label>
-              <input
-                id={`${rotationIdBase}-ty`}
-                type="range"
-                min="-100"
-                max="100"
-                step="1"
-                value={translationY}
-                onChange={(e) =>
-                  handleTranslationChange(
-                    "y",
-                    Number.parseFloat(e.target.value)
-                  )
-                }
-                className="w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor={`${rotationIdBase}-tz`}
-                className="block text-sm font-medium mb-1"
-              >
-                Z: {translationZ.toFixed(2)}
-              </label>
-              <input
-                id={`${rotationIdBase}-tz`}
-                type="range"
-                min="-100"
-                max="100"
-                step="1"
-                value={translationZ}
-                onChange={(e) =>
-                  handleTranslationChange(
-                    "z",
-                    Number.parseFloat(e.target.value)
-                  )
-                }
-                className="w-full"
-              />
+          <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <h3 className="font-semibold mb-2 text-xs text-slate-700">Translation</h3>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div>
+                <label
+                  htmlFor={`${rotationIdBase}-tx`}
+                  className="block text-[10px] font-medium text-slate-600 mb-0.5"
+                >
+                  X: {translationX.toFixed(2)}
+                </label>
+                <input
+                  id={`${rotationIdBase}-tx`}
+                  type="range"
+                  min="-100"
+                  max="100"
+                  step="1"
+                  value={translationX}
+                  onChange={(e) =>
+                    handleTranslationChange(
+                      "x",
+                      Number.parseFloat(e.target.value)
+                    )
+                  }
+                  className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor={`${rotationIdBase}-ty`}
+                  className="block text-[10px] font-medium text-slate-600 mb-0.5"
+                >
+                  Y: {translationY.toFixed(2)}
+                </label>
+                <input
+                  id={`${rotationIdBase}-ty`}
+                  type="range"
+                  min="-100"
+                  max="100"
+                  step="1"
+                  value={translationY}
+                  onChange={(e) =>
+                    handleTranslationChange(
+                      "y",
+                      Number.parseFloat(e.target.value)
+                    )
+                  }
+                  className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor={`${rotationIdBase}-tz`}
+                  className="block text-[10px] font-medium text-slate-600 mb-0.5"
+                >
+                  Z: {translationZ.toFixed(2)}
+                </label>
+                <input
+                  id={`${rotationIdBase}-tz`}
+                  type="range"
+                  min="-100"
+                  max="100"
+                  step="1"
+                  value={translationZ}
+                  onChange={(e) =>
+                    handleTranslationChange(
+                      "z",
+                      Number.parseFloat(e.target.value)
+                    )
+                  }
+                  className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600"
+                />
+              </div>
             </div>
 
-            <h3 className="font-bold mb-3">Rotation (degrees)</h3>
-            <div className="mb-3">
-              <label
-                htmlFor={`${rotationIdBase}-rx`}
-                className="block text-sm font-medium mb-1"
-              >
-                X: {rotationX.toFixed(2)}°
-              </label>
-              <input
-                id={`${rotationIdBase}-rx`}
-                type="range"
-                min="-180"
-                max="180"
-                step="1"
-                value={rotationX}
-                onChange={(e) =>
-                  handleRotationChange("x", Number.parseFloat(e.target.value))
-                }
-                className="w-full"
-              />
-            </div>
-            <div className="mb-3">
-              <label
-                htmlFor={`${rotationIdBase}-ry`}
-                className="block text-sm font-medium mb-1"
-              >
-                Y: {rotationY.toFixed(2)}°
-              </label>
-              <input
-                id={`${rotationIdBase}-ry`}
-                type="range"
-                min="-180"
-                max="180"
-                step="1"
-                value={rotationY}
-                onChange={(e) =>
-                  handleRotationChange("y", Number.parseFloat(e.target.value))
-                }
-                className="w-full"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor={`${rotationIdBase}-rz`}
-                className="block text-sm font-medium mb-1"
-              >
-                Z: {rotationZ.toFixed(2)}°
-              </label>
-              <input
-                id={`${rotationIdBase}-rz`}
-                type="range"
-                min="-180"
-                max="180"
-                step="1"
-                value={rotationZ}
-                onChange={(e) =>
-                  handleRotationChange("z", Number.parseFloat(e.target.value))
-                }
-                className="w-full"
-              />
+            <h3 className="font-semibold mb-2 text-xs text-slate-700">Rotation (degrees)</h3>
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label
+                  htmlFor={`${rotationIdBase}-rx`}
+                  className="block text-[10px] font-medium text-slate-600 mb-0.5"
+                >
+                  X: {rotationX.toFixed(2)}°
+                </label>
+                <input
+                  id={`${rotationIdBase}-rx`}
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationX}
+                  onChange={(e) =>
+                    handleRotationChange("x", Number.parseFloat(e.target.value))
+                  }
+                  className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor={`${rotationIdBase}-ry`}
+                  className="block text-[10px] font-medium text-slate-600 mb-0.5"
+                >
+                  Y: {rotationY.toFixed(2)}°
+                </label>
+                <input
+                  id={`${rotationIdBase}-ry`}
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationY}
+                  onChange={(e) =>
+                    handleRotationChange("y", Number.parseFloat(e.target.value))
+                  }
+                  className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor={`${rotationIdBase}-rz`}
+                  className="block text-[10px] font-medium text-slate-600 mb-0.5"
+                >
+                  Z: {rotationZ.toFixed(2)}°
+                </label>
+                <input
+                  id={`${rotationIdBase}-rz`}
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationZ}
+                  onChange={(e) =>
+                    handleRotationChange("z", Number.parseFloat(e.target.value))
+                  }
+                  className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600"
+                />
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Multiple proteins */}
         <div className="w-full md:w-1/3 px-2 mb-4">
+          <h2 className="text-lg font-semibold mb-1">Multiple Proteins</h2>
+          <p className="text-sm text-gray-600 mb-3">
+            Display multiple proteins together.
+          </p>
           <Viewer
             proteins={proteins3}
             modelSourceUrls={modelSourceUrls}
-            // initialUI="minimal"
-            // spin={true}
-            height={600}
+            height={viewerHeight}
             bgColor="#FFFFFF"
           />
         </div>
 
+        {/* Superposition */}
         <div className="w-full md:w-1/3 px-2 mb-4">
+          <h2 className="text-lg font-semibold mb-1">Superposition</h2>
+          <p className="text-sm text-gray-600 mb-3">
+            Align two proteins using superposition.
+          </p>
           <Viewer
             proteins={proteins1}
             modelSourceUrls={modelSourceUrls}
-            height={600}
+            height={viewerHeight}
           />
         </div>
 
+        {/* Chopping pairs */}
         <div className="w-full md:w-1/3 px-2 mb-4">
+          <h2 className="text-lg font-semibold mb-1">Chopping Pairs</h2>
+          <p className="text-sm text-gray-600 mb-3">
+            Display two proteins with domain chopping.
+          </p>
           <Viewer
             proteins={proteins5}
             modelSourceUrls={modelSourceUrls}
-            height={600}
+            height={viewerHeight}
           />
         </div>
 
+        {/* All labels visible */}
         <div className="w-full md:w-1/3 px-2 mb-4">
+          <h2 className="text-lg font-semibold mb-1">All Labels Visible</h2>
+          <p className="text-sm text-gray-600 mb-3">
+            Show all domain labels on a protein.
+          </p>
           <Viewer
-            proteins={proteins2}
+            proteins={proteins6}
             modelSourceUrls={modelSourceUrls}
-            height={600}
+            height={viewerHeight}
           />
         </div>
       </div>
