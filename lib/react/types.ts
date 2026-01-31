@@ -19,6 +19,9 @@ export type Props = {
 
     bgColor?: ColorHEX;
 
+    // Label visibility control
+    labels?: boolean;
+
     // Disjoint union: at most one of `spin` or `rock` may be provided.
     // Provide one as true to enable that motion, or omit both for none.
   } & (

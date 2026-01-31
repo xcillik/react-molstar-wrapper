@@ -115,6 +115,7 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
     rockSpeed = 0.2,
     height,
     className,
+    labels = true,
   }: Props,
   ref
 ) {
@@ -149,7 +150,7 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
         const end = domain?.ranges[0]?.end;
 
         if (start !== undefined && end !== undefined) {
-          await pluginRef.current.focusOnDomain(start, end);
+          await pluginRef.current.focusOnDomain(start, end, proteinIndex);
         }
       },
       reset: async () => {
@@ -283,6 +284,16 @@ const Viewer = forwardRef<ViewerRef, Props>(function Viewer(
       pluginRef.current.setBackgroundColor(bgColor);
     }
   }, [state, bgColor]);
+
+  useEffect(() => {
+    if (state !== "success" || !pluginRef.current) {
+      return;
+    }
+
+    pluginRef.current.setLabelsVisibility(labels).catch((error) => {
+      console.error("Error setting label visibility:", error);
+    });
+  }, [state, labels]);
 
   const styles: CSSProperties = {
     height: height ? `${height}px` : "100%",

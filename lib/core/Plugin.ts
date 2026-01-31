@@ -22,6 +22,11 @@ import { StateTransforms } from "molstar/lib/mol-plugin-state/transforms";
 class Plugin {
   private plugin: PluginUIContext;
   private objectUrls: Set<string>;
+  private labelsVisible: boolean = true;
+  private storedLabels: Array<{
+    parentRef: string;
+    transform: any;
+  }> = [];
 
   constructor(plugin: PluginUIContext) {
     this.plugin = plugin;
@@ -122,6 +127,87 @@ class Plugin {
     });
   }
 
+  /**
+   * Set the visibility of labels by removing or adding them to the state tree.
+   * This approach is more reliable than trying to modify the isHidden property.
+   */
+  async setLabelsVisibility(visible: boolean) {
+    // If visibility state is already what we want, do nothing
+    if (this.labelsVisible === visible) {
+      return;
+    }
+
+    try {
+      const state = this.plugin.state.data;
+      
+      if (visible) {
+        // When turning labels on, re-add them from stored data
+        if (this.storedLabels.length > 0) {
+          const update = state.build();
+          
+          for (const storedLabel of this.storedLabels) {
+            // Find the parent cell
+            const parentCell = state.cells.get(storedLabel.parentRef);
+            if (!parentCell) continue;
+            
+            // Re-apply the stored transform to re-create the label
+            update.to(storedLabel.parentRef).apply(storedLabel.transform.transformer, storedLabel.transform.params);
+          }
+          
+          await this.plugin.runTask(state.updateTree(update));
+        }
+        
+        this.labelsVisible = true;
+      } else {
+        // When turning labels off, remove all label nodes from the state tree
+        const allObjects = state.selectQ((q) => q.root.subtree());
+        
+        // Filter for objects that are labels - only check for "MVS Custom Label"
+        const labels = allObjects.filter((cell) => {
+          // Check if the cell has an object
+          if (!cell.obj) return false;
+          
+          // Get label and description
+          const label = cell.obj.label || '';
+          const description = cell.obj.description || '';
+          
+          // Only check for "MVS Custom Label"
+          return label === 'MVS Custom Label' || description === 'MVS Custom Label';
+        });
+
+        // Store label data before removing
+        this.storedLabels = [];
+        
+        // Remove each label from the state tree
+        if (labels.length > 0) {
+          const update = state.build();
+          
+          for (const labelCell of labels) {
+            // Get the parent ref (the component this label is attached to)
+            const parentRef = labelCell.transform.parent;
+            
+            // Store the complete transform data for re-adding later
+            this.storedLabels.push({
+              parentRef,
+              transform: {
+                transformer: labelCell.transform.transformer,
+                params: labelCell.transform.params,
+              },
+            });
+            
+            update.delete(labelCell.transform.ref);
+          }
+          
+          await this.plugin.runTask(state.updateTree(update));
+        }
+        
+        this.labelsVisible = false;
+      }
+    } catch (e) {
+      console.error("Error setting label visibility:", e);
+    }
+  }
+
   setAnimation(type: "spin" | "rock" | "off", speed?: number) {
     if (type === "off") {
       this.plugin.canvas3d?.setProps({
@@ -156,7 +242,7 @@ class Plugin {
     });
   }
 
-  async focusOnDomain(domainStart: number, domainEnd: number) {
+  async focusOnDomain(domainStart: number, domainEnd: number, proteinIndex: number = 0) {
     const state = this.plugin.state.data;
 
     // Find all structure cells in the state tree
@@ -164,12 +250,12 @@ class Plugin {
       q.rootsOfType(PluginStateObject.Molecule.Structure)
     );
 
-    if (structures.length === 0) {
+    if (structures.length === 0 || proteinIndex >= structures.length) {
       return;
     }
 
-    // Use the first structure for focusing
-    const structureCell = structures[0];
+    // Use the specified structure for focusing
+    const structureCell = structures[proteinIndex];
     if (!structureCell?.obj) {
       return;
     }

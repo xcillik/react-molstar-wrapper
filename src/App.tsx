@@ -38,27 +38,27 @@ const proteins2: Protein[] = [
       },
       {
         label: "Domain 2",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 400, end: 500 }],
       },
       {
         label: "Domain 3",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 530, end: 570 }],
       },
       {
         label: "Domain 4",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 600, end: 680 }],
       },
       {
         label: "Domain 5",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 720, end: 850 }],
       },
       {
         label: "Domain 6",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 900, end: 950 }],
       },
     ],
@@ -68,32 +68,32 @@ const proteins2: Protein[] = [
     chopping: [
       {
         label: "Domain 1",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 1, end: 30 }],
       },
       {
         label: "Domain 2",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 100, end: 160 }],
       },
       {
         label: "Domain 3",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 180, end: 230 }],
       },
       {
         label: "Domain 4",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 250, end: 300 }],
       },
       {
         label: "Domain 5",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 320, end: 380 }],
       },
       {
         label: "Domain 6",
-        showLabel: true,
+        showLabel: false,
         ranges: [{ start: 400, end: 450 }],
       },
     ],
@@ -194,6 +194,9 @@ function App() {
   const viewerRef = useRef<ViewerRef>(null);
   const rotationIdBase = useId();
 
+  // State for label visibility
+  const [labelsVisible, setLabelsVisible] = useState(true);
+
   // State for slider values (X, Y, Z translation for second protein)
   const [translationX, setTranslationX] = useState(0);
   const [translationY, setTranslationY] = useState(0);
@@ -243,13 +246,13 @@ function App() {
     []
   );
 
-  // const handleDomainHover = (domainId: number) => {
-  //   viewerRef.current?.highlight(0, `Domain ${domainId}`);
-  // };
+  const handleDomainHover = (domainId: number) => {
+    viewerRef.current?.highlight(0, `Domain ${domainId}`);
+  };
 
-  // const handleDomainLeave = () => {
-  //   viewerRef.current?.reset();
-  // };
+  const handleDomainLeave = () => {
+    viewerRef.current?.reset();
+  };
 
   const handleTranslationChange = (axis: "x" | "y" | "z", value: number) => {
     const newTranslation: [number, number, number] = [
@@ -317,20 +320,30 @@ function App() {
           />
         </div>
         <div className="w-full md:w-1/3 px-2 mb-4">
+          <div className="mb-4">
+            <button
+              onClick={() => setLabelsVisible(!labelsVisible)}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Toggle Labels {labelsVisible ? "Off" : "On"}
+            </button>
+          </div>
           <Viewer
             ref={viewerRef}
-            proteins={proteins6}
+            // proteins={proteins6}
+            proteins={proteins2}
             modelSourceUrls={modelSourceUrls}
             // rock={true}
             height={600}
             // bgColor="#00FF00"
+            labels={labelsVisible}
           />
 
-          {/* <div
+          <div
             onMouseEnter={() => handleDomainHover(1)}
             onMouseLeave={() => handleDomainLeave()}
           >1</div>
-          <div
+          {/* <div
             onMouseEnter={() => handleDomainHover(2)}
             onMouseLeave={() => handleDomainLeave()}
           >2</div>

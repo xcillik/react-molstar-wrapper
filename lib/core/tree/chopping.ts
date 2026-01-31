@@ -16,7 +16,7 @@ function normalizeChoppingData(
   return chopping
     .map((entry) => ({
       label: entry.label,
-      showLabel: entry.showLabel,
+      showLabel: entry.showLabel ?? true,
       ranges: entry.ranges
         .map((range) => ({
           start: Math.min(range.start, range.end),

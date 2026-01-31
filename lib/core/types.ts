@@ -14,11 +14,6 @@ export type Matrix3DFlattened = [
   number,
 ];
 
-// type Chopping = {
-//   start: number;
-//   end: number;
-// };
-
 type _Chopping = {
   start: number;
   end: number;
@@ -26,7 +21,7 @@ type _Chopping = {
 
 type Chopping = {
   label: string;
-  showLabel: boolean;
+  showLabel?: boolean;
   ranges: _Chopping;
 }[];
 
