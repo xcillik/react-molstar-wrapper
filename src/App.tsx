@@ -1,7 +1,7 @@
 import "./globals.css";
 import Viewer from "../lib/react/Viewer";
 import { useRef, useState, useMemo, useId } from "react";
-import type { Protein, ViewerRef } from "../lib";
+import type { ViewerRef } from "../lib";
 import {
   proteins1,
   proteins2,
@@ -170,7 +170,9 @@ function App() {
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">
-            <span className="text-xs text-slate-600 font-medium">Hover domains:</span>
+            <span className="text-xs text-slate-600 font-medium">
+              Hover domains:
+            </span>
             <div className="flex flex-wrap gap-1">
               <span className="text-[10px] text-slate-500 mr-1">Query:</span>
               {[1, 2].map((domainId) => (
@@ -200,7 +202,9 @@ function App() {
           </div>
 
           <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
-            <h3 className="font-semibold mb-2 text-xs text-slate-700">Translation</h3>
+            <h3 className="font-semibold mb-2 text-xs text-slate-700">
+              Translation
+            </h3>
             <div className="grid grid-cols-3 gap-2 mb-3">
               <div>
                 <label
@@ -273,7 +277,9 @@ function App() {
               </div>
             </div>
 
-            <h3 className="font-semibold mb-2 text-xs text-slate-700">Rotation (degrees)</h3>
+            <h3 className="font-semibold mb-2 text-xs text-slate-700">
+              Rotation (degrees)
+            </h3>
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <label

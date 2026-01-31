@@ -139,53 +139,60 @@ class Plugin {
 
     try {
       const state = this.plugin.state.data;
-      
+
       if (visible) {
         // When turning labels on, re-add them from stored data
         if (this.storedLabels.length > 0) {
           const update = state.build();
-          
+
           for (const storedLabel of this.storedLabels) {
             // Find the parent cell
             const parentCell = state.cells.get(storedLabel.parentRef);
             if (!parentCell) continue;
-            
+
             // Re-apply the stored transform to re-create the label
-            update.to(storedLabel.parentRef).apply(storedLabel.transform.transformer, storedLabel.transform.params);
+            update
+              .to(storedLabel.parentRef)
+              .apply(
+                storedLabel.transform.transformer,
+                storedLabel.transform.params
+              );
           }
-          
+
           await this.plugin.runTask(state.updateTree(update));
         }
-        
+
         this.labelsVisible = true;
       } else {
         // When turning labels off, remove all label nodes from the state tree
         const allObjects = state.selectQ((q) => q.root.subtree());
-        
+
         // Filter for objects that are labels - only check for "MVS Custom Label"
         const labels = allObjects.filter((cell) => {
           // Check if the cell has an object
           if (!cell.obj) return false;
-          
+
           // Get label and description
-          const label = cell.obj.label || '';
-          const description = cell.obj.description || '';
-          
+          const label = cell.obj.label || "";
+          const description = cell.obj.description || "";
+
           // Only check for "MVS Custom Label"
-          return label === 'MVS Custom Label' || description === 'MVS Custom Label';
+          return (
+            label === "MVS Custom Label" || description === "MVS Custom Label"
+          );
         });
 
         // Store label data before removing
         this.storedLabels = [];
-        
+
         // Remove each label from the state tree
         if (labels.length > 0) {
           const update = state.build();
-          
+
           for (const labelCell of labels) {
             // Get the parent ref (the component this label is attached to)
             const parentRef = labelCell.transform.parent;
-            
+
             // Store the complete transform data for re-adding later
             this.storedLabels.push({
               parentRef,
@@ -194,13 +201,13 @@ class Plugin {
                 params: labelCell.transform.params,
               },
             });
-            
+
             update.delete(labelCell.transform.ref);
           }
-          
+
           await this.plugin.runTask(state.updateTree(update));
         }
-        
+
         this.labelsVisible = false;
       }
     } catch (e) {
@@ -242,7 +249,11 @@ class Plugin {
     });
   }
 
-  async focusOnDomain(domainStart: number, domainEnd: number, proteinIndex: number = 0) {
+  async focusOnDomain(
+    domainStart: number,
+    domainEnd: number,
+    proteinIndex: number = 0
+  ) {
     const state = this.plugin.state.data;
 
     // Find all structure cells in the state tree
