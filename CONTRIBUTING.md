@@ -8,9 +8,9 @@
 
 ## Technical Stack
 
-- **Runtime**: Bun
+- **Runtime**: Node
 - **Language**: TypeScript
-- **Linting**: BiomeJS
+- **Linting**: ESLint
 - **Formatting**: Prettier
 
 ## Development Setup
@@ -19,7 +19,7 @@
 
 - Package manager: **Bun**
 - TypeScript
-- Linting: **BiomeJS**
+- Linting: **ESLint**
 - Formatting: **Prettier**
 
 ### Installation
@@ -33,13 +33,13 @@ bun install
 Start local development server:
 
 ```bash
-bun run dev
+bun run dev:showcase
 ```
 
-Build for production:
+Build library for production:
 
 ```bash
-bun run build
+bun run build:lib
 ```
 
 Distribution output folder: `dist`

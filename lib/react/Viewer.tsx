@@ -27,7 +27,7 @@ type ViewerState = "loading" | "success" | "error";
  * API via a forwarded ref. The component is responsible for initializing and
  * releasing a shared plugin instance (via Manager), loading structure data (either
  * from raw `proteins` input or from precomputed `mvs`), and exposing convenience
- * controls such as background color and simple animations (spin/rock).
+ * controls such as background color, label visibility, and simple animations (spin/rock).
  *
  * Remarks
  * - Exactly one of `proteins` or `mvs` must be provided. Passing both or neither
@@ -52,6 +52,7 @@ type ViewerState = "loading" | "success" | "error";
  * @param initialUI - Which initial UI preset to use for the embedded plugin.
  *   Typical values: "standard" | "minimal". Default: "standard".
  * @param bgColor - Background color for the viewer (any valid CSS color). Default: "#ffffff".
+ * @param labels - Whether to show labels in the viewer. Default: true.
  * @param spin - Whether to enable continuous spin animation. Mutually exclusive with `rock`.
  * @param spinSpeed - Speed multiplier for the spin animation. Default: 0.05.
  * @param rock - Whether to enable rock animation (back-and-forth). Mutually exclusive with `spin`.
@@ -62,9 +63,10 @@ type ViewerState = "loading" | "success" | "error";
  *
  * Forwarded ref (ViewerRef)
  * The component forwards a ref exposing the following async methods:
- * - highlight(domainId: number): Promise<void>
- *     Focuses/highlights a domain in the first protein using its choppingData.
- *     No-op if plugin or choppingData is not available.
+ * - highlight(proteinIndex: number, label: string): Promise<void>
+ *     Focuses/highlights a domain within the specified protein by matching the label
+ *     against the protein's chopping data. The domain's first range (start/end) is used
+ *     to focus the view. No-op if plugin, proteins, or matching domain is not available.
  * - reset(): Promise<void>
  *     Resets the plugin's view to its default/original pose.
  * - updateSuperposition(proteinIndex: number, translation?, rotation?): Promise<void>
@@ -81,6 +83,8 @@ type ViewerState = "loading" | "success" | "error";
  *   neither results in animations being turned off.
  * - When `bgColor` changes (and the component is in "success" state), the plugin's
  *   background color is updated.
+ * - When `labels` changes (and the component is in "success" state), the plugin's
+ *   label visibility is updated.
  * - The container element receives a stable id (useId) and CSS class "react-molstar",
  *   plus "no-controls" when `initialUI === "minimal"`. The visualization container's
  *   opacity animates between loading/success states.
@@ -92,9 +96,10 @@ type ViewerState = "loading" | "success" | "error";
  *   proteins={myProteins}
  *   initialUI="standard"
  *   bgColor="#000"
+ *   labels={true}
  * />
  * // later
- * await ref.current?.highlight(3);
+ * await ref.current?.highlight(0, "Domain A");
  * await ref.current?.updateSuperposition(1, [10,0,0], [[1,0,0],[0,1,0],[0,0,1]]);
  *
  * See also

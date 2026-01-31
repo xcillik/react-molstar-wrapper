@@ -1,28 +1,44 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+## v0.0.9
+
+- Added `labels` prop to control label visibility in the viewer
+- Updated `highlight` method to accept `proteinIndex` parameter for targeting specific proteins
+
+## v0.0.8
+
+No changes.
+
 ## v0.0.7
 
-- Cleanup
+- Code cleanup and refactoring
 
 ## v0.0.6
 
-- Fix: Swap label colors for multiple domains in superposition
+- Fixed label color assignment for multiple domains in superposition scenarios
 
 ## v0.0.5
 
-- Swap blue and yellow color for case with 2 proteins (blue to be the color for the first protein in array)
+- Adjusted color scheme for two-protein visualizations: blue is now assigned to the first protein in the array
 
 ## v0.0.4
 
-- Update coloring based on number of proteins, chopping length
-- Refactored MVS tree builder
+- Updated coloring logic based on protein count and chopping data length
+- Refactored MVS tree builder implementation
 
 ## v0.0.3
 
+No changes.
+
 ## v0.0.2
+
+No changes.
 
 ## v0.0.1
 
-- Added core manager
-- Added React wrapper
-- Added LoaderView and ErrorView
+- Initial release
+- Implemented core plugin manager with lifecycle management
+- Added React wrapper component for Mol* viewer
+- Implemented LoaderView and ErrorView components
